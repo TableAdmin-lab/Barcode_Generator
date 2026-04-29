@@ -128,7 +128,7 @@
         .info-trigger { position: relative; display: inline-flex; align-items: center; }
         .info-tooltip {
             visibility: hidden;
-            width: 220px;
+            width: 240px;
             background-color: #1c2128;
             color: #fff;
             text-align: center;
@@ -182,26 +182,22 @@
             </div>
             
             <div class="flex items-center gap-3">
+                <!-- Consolidated Snapshot Management -->
                 <div class="flex items-center gap-1 bg-slate-800/30 p-1 rounded-xl border border-slate-700/50 mr-2">
-                    <div class="flex items-center">
-                        <button onclick="exportSnapshot()" title="Backup Registry" class="action-icon-btn p-2 rounded-lg text-slate-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        </button>
-                        <span class="info-trigger text-slate-600 ml-1 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            <span class="info-tooltip">Backup: Downloads your entire registry as a JSON file to your local computer.</span>
+                    <button onclick="exportSnapshot()" title="Backup Registry" class="action-icon-btn p-2 rounded-lg text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </button>
+                    <button onclick="triggerImport()" title="Import Snapshot" class="action-icon-btn p-2 rounded-lg text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </button>
+                    <span class="info-trigger text-slate-600 ml-1 mr-2 cursor-help">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <span class="info-tooltip info-tooltip-bottom text-left">
+                            <strong>Snapshot Hub:</strong><br>
+                            • <strong>Backup:</strong> Save your entire registry as a local JSON file.<br>
+                            • <strong>Import:</strong> Restore data from a previously saved snapshot.
                         </span>
-                    </div>
-                    <div class="w-[1px] h-4 bg-slate-700 mx-1"></div>
-                    <div class="flex items-center">
-                        <button onclick="triggerImport()" title="Import Snapshot" class="action-icon-btn p-2 rounded-lg text-slate-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                        </button>
-                        <span class="info-trigger text-slate-600 ml-1 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            <span class="info-tooltip">Import: Select a previously backed up JSON file to restore your registry data.</span>
-                        </span>
-                    </div>
+                    </span>
                     <input type="file" id="importInput" class="hidden" accept=".json" onchange="handleImport(event)">
                 </div>
 
@@ -220,7 +216,7 @@
                         Product Identification
                         <span class="info-trigger text-slate-500 cursor-help">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            <span class="info-tooltip">Enter the primary name of your item. This appears above the barcode.</span>
+                            <span class="info-tooltip info-tooltip-bottom">The primary name of your item. Appears as the main label above the barcode lines.</span>
                         </span>
                     </label>
                     <input type="text" id="productName" placeholder="e.g. Coffee Beans" class="w-full px-4 py-3 rounded-xl neo-input text-sm">
@@ -230,27 +226,39 @@
                         Product Size/Variant
                         <span class="info-trigger text-slate-500 cursor-help">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            <span class="info-tooltip">Separate with commas (e.g. Hazelnut, White Chocolate). Generates a barcode for each variant.</span>
+                            <span class="info-tooltip info-tooltip-bottom">Separate variants with commas (e.g. Hazelnut, Vanilla). Generates unique barcodes for every flavor/size listed.</span>
                         </span>
                     </label>
-                    <input type="text" id="productSizes" placeholder="e.g. S, M, L" class="w-full px-4 py-3 rounded-xl neo-input text-sm">
+                    <input type="text" id="productSizes" placeholder="e.g. Hazelnut, White Chocolate" class="w-full px-4 py-3 rounded-xl neo-input text-sm">
                 </div>
                 <div>
                     <label class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                         Retail Price
                         <span class="info-trigger text-slate-500 cursor-help">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            <span class="info-tooltip">Optional. Used in the Retail Tag template. Enter digits only or with currency (e.g. R 35.00).</span>
+                            <span class="info-tooltip info-tooltip-bottom">Optional pricing. Displayed at the bottom of the card. Supports currency symbols (e.g. R 35.00).</span>
                         </span>
                     </label>
                     <input type="text" id="productPrice" placeholder="e.g. R 35.00" class="w-full px-4 py-3 rounded-xl neo-input text-sm">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Code Value / SKU</label>
+                    <label class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                        Code Value / SKU
+                        <span class="info-trigger text-slate-500 cursor-help">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span class="info-tooltip info-tooltip-bottom">The raw data to encode. If left blank, a random valid value matching your selected format is generated.</span>
+                        </span>
+                    </label>
                     <input type="text" id="barcodeValue" placeholder="e.g. 123456789012" class="w-full px-4 py-3 rounded-xl neo-input text-sm font-mono">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Barcode format</label>
+                    <label class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                        Barcode format
+                        <span class="info-trigger text-slate-500 cursor-help">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span class="info-tooltip info-tooltip-bottom">Select the encoding standard. EAN-13 is globally standard for retail POS scanning.</span>
+                        </span>
+                    </label>
                     <select id="barcodeFormat" onchange="updatePreview()" class="w-full px-4 py-3 rounded-xl neo-input text-sm bg-transparent cursor-pointer">
                         <option value="EAN13" selected>EAN-13 (Retail)</option>
                         <option value="CODE128">CODE128 (Standard)</option>
@@ -261,7 +269,13 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Category Assignment</label>
+                    <label class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                        Category
+                        <span class="info-trigger text-slate-500 cursor-help">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span class="info-tooltip info-tooltip-bottom">Type to create a group. The system remembers previous names to help you organize your registry.</span>
+                        </span>
+                    </label>
                     <input type="text" id="barcodeCategory" list="categoryOptions" placeholder="Default Category" class="w-full px-4 py-3 rounded-xl neo-input text-sm bg-transparent">
                     <datalist id="categoryOptions"></datalist>
                 </div>
@@ -273,7 +287,7 @@
                     Add Entry
                 </button>
                 <button onclick="toggleSettings(true)" class="bg-slate-800/50 hover:bg-slate-700/50 text-slate-200 px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-slate-700/50">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1-2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     Barcode settings
                 </button>
                 <div class="h-8 w-[1px] bg-slate-800/50 mx-2"></div>
@@ -284,19 +298,33 @@
             </div>
         </div>
 
-        <!-- SEARCH AND FILTER TOOLS -->
-        <div id="filterTools" class="hidden mb-10 flex flex-col md:flex-row items-center gap-4">
-            <div class="flex-1 relative w-full">
-                <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <!-- Registry Hub Heading with Info Icon -->
+        <div id="filterTools" class="hidden mb-10">
+            <h2 class="flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-6 pb-2 border-b border-slate-800/50">
+                Registry Intelligence
+                <span class="info-trigger text-slate-600 cursor-help">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span class="info-tooltip info-tooltip-bottom text-left">
+                        <strong>Management Tools:</strong><br>
+                        • Use Search to find specific SKU or Variant names.<br>
+                        • Filter Categories to isolate specific product lines.<br>
+                        • Use per-item Print icons to export single labels.
+                    </span>
+                </span>
+            </h2>
+            <div class="flex flex-col md:flex-row items-center gap-4">
+                <div class="flex-1 relative w-full">
+                    <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+                    <input type="text" id="registrySearch" oninput="renderList()" placeholder="Search product name or variant..." 
+                           class="w-full pl-12 pr-4 py-3 rounded-2xl neo-input text-sm">
                 </div>
-                <input type="text" id="registrySearch" oninput="renderList()" placeholder="Search product name or variant..." 
-                       class="w-full pl-12 pr-4 py-3 rounded-2xl neo-input text-sm">
-            </div>
-            <div class="w-full md:w-64">
-                <select id="registryFilterCategory" onchange="renderList()" class="w-full px-4 py-3 rounded-2xl neo-input text-sm bg-transparent cursor-pointer">
-                    <option value="all">All Categories</option>
-                </select>
+                <div class="w-full md:w-64">
+                    <select id="registryFilterCategory" onchange="renderList()" class="w-full px-4 py-3 rounded-2xl neo-input text-sm bg-transparent cursor-pointer">
+                        <option value="all">All Categories</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -347,7 +375,16 @@
                 <div class="flex flex-col lg:flex-row gap-12">
                     <div class="flex-1 space-y-8">
                         <div class="space-y-4">
-                             <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-[var(--border-main)] pb-2">Active Template</h4>
+                             <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-[var(--border-main)] pb-2">
+                                Active Template
+                                <span class="info-trigger text-slate-600 ml-auto cursor-help">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                    <span class="info-tooltip info-tooltip-bottom text-left">
+                                        • <strong>Node:</strong> Minimal card with title and price.<br>
+                                        • <strong>Tag:</strong> Complete retail layout with category, customer care, size pill and bold pricing.
+                                    </span>
+                                </span>
+                             </h4>
                              <div class="flex gap-4">
                                  <button onclick="setTemplate('node')" id="btnNodeTemp" class="flex-1 p-4 rounded-xl border border-blue-600 bg-blue-600/10 text-white font-bold text-xs transition-all">DASHBOARD NODE</button>
                                  <button onclick="setTemplate('tag')" id="btnTagTemp" class="flex-1 p-4 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 font-bold text-xs transition-all">RETAIL TAG</button>
@@ -360,7 +397,7 @@
                                     Typography
                                     <span class="info-trigger text-slate-600 ml-auto cursor-help">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                        <span class="info-tooltip info-tooltip-bottom">Configure fonts for product names and retail prices.</span>
+                                        <span class="info-tooltip info-tooltip-bottom">Adjust colors, sizing, and fonts for all text elements including names and prices.</span>
                                     </span>
                                 </h4>
                                 <div class="grid grid-cols-2 gap-4">
@@ -368,14 +405,14 @@
                                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Name Color</label>
                                         <div class="flex items-center gap-2">
                                             <input type="color" id="nameColor" value="#000000" oninput="updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
-                                            <span id="nameColorText" class="text-[10px] font-mono opacity-50">#000000</span>
+                                            <span id="nameColorText" class="text-[10px] font-mono opacity-50 text-slate-400">#000000</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-col gap-2">
                                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Price Color</label>
                                         <div class="flex items-center gap-2">
                                             <input type="color" id="priceColor" value="#000000" oninput="updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
-                                            <span id="priceColorText" class="text-[10px] font-mono opacity-50">#000000</span>
+                                            <span id="priceColorText" class="text-[10px] font-mono opacity-50 text-slate-400">#000000</span>
                                         </div>
                                     </div>
                                 </div>
@@ -398,7 +435,7 @@
                                     Encoding Visuals
                                     <span class="info-trigger text-slate-600 ml-auto cursor-help">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                        <span class="info-tooltip info-tooltip-bottom">Adjust barcode line colors and box styling.</span>
+                                        <span class="info-tooltip info-tooltip-bottom">Modify the visual parameters of the barcode lines, digits, and the background box color.</span>
                                     </span>
                                 </h4>
                                 <div class="grid grid-cols-2 gap-4">
@@ -406,14 +443,14 @@
                                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Line Color</label>
                                         <div class="flex items-center gap-2">
                                             <input type="color" id="lineColor" value="#000000" oninput="updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
-                                            <span id="lineColorText" class="text-[10px] font-mono opacity-50">#000000</span>
+                                            <span id="lineColorText" class="text-[10px] font-mono opacity-50 text-slate-400">#000000</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-col gap-2">
                                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Number Color</label>
                                         <div class="flex items-center gap-2">
                                             <input type="color" id="textColor" value="#000000" oninput="updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
-                                            <span id="textColorText" class="text-[10px] font-mono opacity-50">#000000</span>
+                                            <span id="textColorText" class="text-[10px] font-mono opacity-50 text-slate-400">#000000</span>
                                         </div>
                                     </div>
                                 </div>
@@ -421,7 +458,7 @@
                                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 text-slate-400">Barcode Box Color</label>
                                     <div class="flex items-center gap-2">
                                         <input type="color" id="barcodeBg" value="#ffffff" oninput="updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
-                                        <span id="barcodeBgText" class="text-[10px] font-mono opacity-50">#FFFFFF</span>
+                                        <span id="barcodeBgText" class="text-[10px] font-mono opacity-50 text-slate-400">#FFFFFF</span>
                                     </div>
                                 </div>
                             </div>
@@ -432,7 +469,7 @@
                                 Surface Layers
                                 <span class="info-trigger text-slate-600 ml-auto cursor-help">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                    <span class="info-tooltip info-tooltip-bottom">Configure card color or custom texture uploads.</span>
+                                    <span class="info-tooltip info-tooltip-bottom">Configure background aesthetics and secondary data visibility (Category names).</span>
                                 </span>
                             </h4>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -440,7 +477,7 @@
                                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Card Background</label>
                                     <div class="flex items-center gap-4">
                                         <input type="color" id="bgColor" value="#F7F7F8" oninput="updatePreview()" class="w-10 h-10 rounded-xl cursor-pointer border-0 p-0 bg-transparent">
-                                        <span id="bgColorText" class="text-[10px] font-mono opacity-50">#F7F7F8</span>
+                                        <span id="bgColorText" class="text-[10px] font-mono opacity-50 text-slate-400">#F7F7F8</span>
                                     </div>
                                 </div>
                                 <div class="space-y-4">
@@ -450,19 +487,39 @@
                                         <input type="file" id="bgImageInput" accept="image/*" onchange="handleImageUpload(event)" class="hidden">
                                     </label>
                                     <div class="space-y-3">
-                                        <label class="flex items-center cursor-pointer">
+                                        <label class="flex items-center cursor-pointer text-slate-400">
                                             <input type="checkbox" id="displayValue" checked onchange="updatePreview()" class="sr-only peer">
                                             <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5 relative"></div>
-                                            <span class="ml-3 text-[10px] font-bold opacity-60 uppercase tracking-widest text-slate-400">Display Number</span>
+                                            <span class="ml-3 text-[10px] font-bold opacity-60 uppercase tracking-widest">Display Number</span>
                                         </label>
-                                        <label class="flex items-center cursor-pointer">
+                                        <label class="flex items-center cursor-pointer text-slate-400">
                                             <input type="checkbox" id="displayCategory" checked onchange="updatePreview()" class="sr-only peer">
                                             <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5 relative"></div>
-                                            <span class="ml-3 text-[10px] font-bold opacity-60 uppercase tracking-widest text-slate-400">Display Category</span>
+                                            <span class="ml-3 text-[10px] font-bold opacity-60 uppercase tracking-widest">Display Category</span>
                                         </label>
                                         <button id="removeImgBtn" onclick="removeBackgroundImage()" class="hidden text-[10px] font-bold text-pink-500 hover:underline uppercase">Clear Texture</button>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
+                            <div class="col-span-2">
+                                <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4 border-b border-[var(--border-main)] pb-2">
+                                    Proportions
+                                    <span class="info-trigger text-slate-600 ml-auto cursor-help">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                        <span class="info-tooltip info-tooltip-bottom">Fine-tune barcode dimensions for optimal scanner readability across various devices.</span>
+                                    </span>
+                                </h4>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Line Thickness</label>
+                                <input type="range" id="barWidth" min="1" max="4" step="0.5" value="2" oninput="updatePreview()" class="w-full h-1 bg-slate-300 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Barcode Height</label>
+                                <input type="range" id="barHeight" min="20" max="150" step="5" value="50" oninput="updatePreview()" class="w-full h-1 bg-slate-300 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
                             </div>
                         </div>
                     </div>
@@ -581,7 +638,7 @@
 
             Object.entries(propMap).forEach(([elId, propKey]) => {
                 const el = document.getElementById(elId + 'Text');
-                if (el) el.innerText = currentTemplateSettings[propKey].toUpperCase();
+                if (el) el.innerText = (currentTemplateSettings[propKey] || '').toUpperCase();
             });
 
             const container = document.getElementById('livePreviewContainer');
@@ -600,6 +657,8 @@
             
             const font = FONT_FAMILIES[currentTemplateSettings.nameFont];
             const size = currentTemplateSettings.nameSize;
+            const livePrice = getVal('productPrice');
+            const liveCat = getVal('barcodeCategory') || 'Category Name';
             
             if (activeTemplate === 'node') {
                 content.innerHTML = `
@@ -609,11 +668,12 @@
                             <svg id="previewBarcode"></svg>
                             ${currentTemplateSettings.displayValue ? `<p style="color: ${currentTemplateSettings.textColor}; margin-top: 0.5rem; font-size: 10px; font-family: monospace; font-weight: bold;">123456789012</p>` : ''}
                         </div>
+                        ${livePrice ? `<p style="color: ${currentTemplateSettings.priceColor}; margin-top: 1rem; font-weight: 900; font-size: 1.25rem;">${livePrice}</p>` : ''}
                     </div>`;
             } else {
                 content.innerHTML = `
                     <div class="flex flex-col items-center w-full px-2">
-                        ${currentTemplateSettings.displayCategory ? `<p style="color: ${currentTemplateSettings.nameColor}; font-size: ${Math.max(8, size-4)}px; font-family: ${font}; font-weight: bold; margin-bottom: 0.5rem; text-align: center; text-transform: uppercase; opacity: 0.7;">RETAIL LINE ITEM</p>` : ''}
+                        ${currentTemplateSettings.displayCategory ? `<p style="color: ${currentTemplateSettings.nameColor}; font-size: ${Math.max(8, size-4)}px; font-family: ${font}; font-weight: bold; margin-bottom: 0.5rem; text-align: center; text-transform: uppercase; opacity: 0.7;">${liveCat}</p>` : ''}
                         <p style="color: ${currentTemplateSettings.nameColor}; font-size: ${size}px; font-family: ${font}; font-weight: 900; margin-bottom: 1rem; text-align: center; text-transform: uppercase;">PRODUCT NODE NAME</p>
                         <div style="width: 100%; background-color: white; padding: 0.5rem; border-radius: 0.25rem; display: flex; flex-direction: column; align-items: center; margin-bottom: 0.5rem; border: 1px solid #e2e8f0;">
                              <svg id="previewBarcode"></svg>
@@ -623,20 +683,13 @@
                             <p style="color: ${currentTemplateSettings.nameColor}; font-size: 8px; font-weight: 900; text-transform: uppercase; opacity: 0.6;">Customer Care: 0860 30 30 30</p>
                         </div>
                         <div style="width: 100%; padding: 0.5rem 1rem; border-radius: 9999px; text-align: center; color: white; margin-bottom: 0.5rem; font-weight: 900; font-size: 1.25rem; background-color: ${currentTemplateSettings.lineColor === '#000000' ? '#1e3a8a' : currentTemplateSettings.lineColor}">S/M</div>
-                        <p style="color: ${currentTemplateSettings.priceColor}; font-weight: 900; font-size: 1.5rem; letter-spacing: -0.05em;">R 35.00</p>
+                        <p style="color: ${currentTemplateSettings.priceColor}; font-weight: 900; font-size: 1.5rem; letter-spacing: -0.05em;">${livePrice || 'R 35.00'}</p>
                     </div>`;
             }
 
             try {
                 JsBarcode("#previewBarcode", "123456789012", { format: "EAN13", lineColor: currentTemplateSettings.lineColor, background: "transparent", width: currentTemplateSettings.width, height: 40, displayValue: false });
             } catch (e) {}
-        }
-
-        function applyToAll() {
-            if (barcodes.length === 0) return;
-            barcodes.forEach(item => { item.design = JSON.parse(JSON.stringify(currentTemplateSettings)); item.template = activeTemplate; });
-            renderList();
-            showToast("Design synchronized.");
         }
 
         function addBarcode() {
@@ -758,6 +811,7 @@
                                     <svg id="barcode-${Math.floor(item.id)}"></svg>
                                     ${design.displayValue ? `<p class="mt-2 text-[10px] font-mono font-bold" style="color: ${design.textColor}">${item.value}</p>` : ''}
                                 </div>
+                                ${item.price ? `<p style="color: ${design.priceColor}; margin-top: 1rem; font-weight: 900; font-size: 1.1rem;" class="z-10">${item.price}</p>` : ''}
                             </div>`;
                     } else {
                         layoutHtml = `
@@ -793,7 +847,8 @@
                             <div style="background-color: ${design.barcodeBg}; padding: 15px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
                                 <svg id="print-barcode-${Math.floor(item.id)}"></svg>
                                 ${design.displayValue ? `<p style="font-family: monospace; font-weight: bold; font-size: 11px; margin-top: 8px; color: ${design.textColor}">${item.value}</p>` : ''}
-                            </div>`;
+                            </div>
+                            ${item.price ? `<p style="color: ${design.priceColor}; margin-top: 1rem; font-weight: 900; font-size: 1.25rem;">${item.price}</p>` : ''}`;
                     } else {
                         pCard.innerHTML = `
                             <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
@@ -831,26 +886,6 @@
                 filterSelect.innerHTML = '<option value="all">All Categories</option>' + categoriesMemory.map(cat => `<option value="${cat}">${cat}</option>`).join('');
                 filterSelect.value = currentFilter;
             }
-        }
-
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    currentTemplateSettings.backgroundImage = e.target.result;
-                    document.getElementById('removeImgBtn').classList.remove('hidden');
-                    updatePreview();
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function removeBackgroundImage() {
-            currentTemplateSettings.backgroundImage = null;
-            document.getElementById('bgImageInput').value = '';
-            document.getElementById('removeImgBtn').classList.add('hidden');
-            updatePreview();
         }
 
         function showToast(msg) {
@@ -899,6 +934,27 @@
         function closeAdvisory() {
             document.getElementById('advisoryModal').classList.add('modal-hidden');
             document.body.style.overflow = 'auto';
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentTemplateSettings.backgroundImage = e.target.result;
+                    document.getElementById('removeImgBtn')?.classList.remove('hidden');
+                    updatePreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeBackgroundImage() {
+            currentTemplateSettings.backgroundImage = null;
+            const inp = document.getElementById('bgImageInput');
+            if (inp) inp.value = '';
+            document.getElementById('removeImgBtn')?.classList.add('hidden');
+            updatePreview();
         }
 
         window.onload = () => { 
