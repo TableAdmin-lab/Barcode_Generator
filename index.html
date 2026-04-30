@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode Generator By Yoco</title>
+    <title>Barcode Generator &#9731;</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- JsBarcode Library -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
@@ -168,8 +168,8 @@
         <!-- Top Status Bar -->
         <div class="flex items-center justify-between mb-12 px-2">
             <div class="flex items-center gap-3">
-                <div class="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white italic">B</div>
-                <h1 class="text-xl font-bold tracking-tight text-white dark:text-white">BARCODE GENERATOR <span class="text-xs font-normal text-slate-500 ml-2">By Yoco</span></h1>
+                <img src="images.png" alt="Yoco Logo" class="h-8 w-auto rounded object-contain" onerror="this.onerror=null; this.outerHTML='<div class=\'h-8 px-3 bg-[#009fe3] rounded flex items-center justify-center font-black text-white text-[17px] tracking-tighter\' style=\'font-family: Arial, sans-serif;\'>YOCO</div>';">
+                <h1 class="text-xl font-bold tracking-tight text-white dark:text-white">BARCODE GENERATOR <span class="text-xs font-normal text-slate-500 ml-2">&#9731;</span></h1>
             </div>
             
             <div class="flex items-center gap-3">
@@ -191,6 +191,11 @@
                     </span>
                     <input type="file" id="importInput" class="hidden" accept=".json" onchange="window.handleImport(event)">
                 </div>
+
+                <!-- Reset App Icon -->
+                <button onclick="window.triggerResetDefault()" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-all" title="Reset Application">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                </button>
 
                 <!-- Hazard Icon for Advisory -->
                 <button onclick="window.showAdvisory()" class="p-2 text-amber-500 hover:bg-amber-500/10 rounded-lg transition-all" title="Storage Advisory">
@@ -287,7 +292,7 @@
                     Barcode settings
                 </button>
                 <div class="h-8 w-[1px] bg-slate-800/50 mx-2"></div>
-                <button id="exportBtn" onclick="window.handlePrint()" class="bg-white hover:bg-slate-100 text-black px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 shadow-sm border border-slate-200">
+                <button id="exportBtn" onclick="handlePrint()" class="bg-white hover:bg-slate-100 text-black px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 shadow-sm border border-slate-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                     Export
                 </button>
@@ -358,7 +363,22 @@
         </div>
     </div>
 
-    <!-- CLEAR ALL CONFIRMATION MODAL -->
+    <!-- RESET EVERYTHING CONFIRMATION MODAL -->
+    <div id="resetModal" class="no-print fixed inset-0 z-[110] flex items-center justify-center p-4 modal-overlay modal-hidden transition-all duration-300">
+        <div class="modal-content relative bg-[#1c2128] w-full max-w-md rounded-3xl border border-red-500/30 custom-shadow p-8 text-center text-white">
+            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            </div>
+            <h2 class="text-xl font-bold mb-2 text-white">Reset Application?</h2>
+            <p class="text-sm text-slate-400 leading-relaxed mb-8">This will clear all barcodes, delete custom templates, and return settings to their defaults.</p>
+            <div class="flex gap-3">
+                <button onclick="window.closeResetDefault()" class="flex-1 px-6 py-3 rounded-xl border border-slate-700 text-slate-400 text-xs font-bold uppercase tracking-widest">Cancel</button>
+                <button onclick="window.confirmResetDefault()" class="flex-1 px-6 py-3 rounded-xl bg-red-600 text-white text-xs font-bold uppercase tracking-widest">Reset All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLEAR ALL REGISTRY CONFIRMATION MODAL -->
     <div id="clearAllModal" class="no-print fixed inset-0 z-[110] flex items-center justify-center p-4 modal-overlay modal-hidden transition-all duration-300">
         <div class="modal-content relative bg-[#1c2128] w-full max-w-md rounded-3xl border border-pink-500/30 custom-shadow p-8 text-center text-white">
             <div class="w-16 h-16 bg-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-6 text-pink-500">
@@ -432,6 +452,10 @@
                             <div class="space-y-6">
                                 <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-[var(--border-main)] pb-2 text-slate-400">
                                     Typography
+                                    <span class="info-trigger text-slate-600 ml-auto cursor-help">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                        <span class="info-tooltip info-tooltip-bottom text-left text-white">Adjust colors, sizing, and fonts for all text elements.</span>
+                                    </span>
                                 </h4>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="flex flex-col gap-2">
@@ -462,6 +486,10 @@
                             <div class="space-y-6">
                                 <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-[var(--border-main)] pb-2 text-slate-400">
                                     Encoding Visuals
+                                    <span class="info-trigger text-slate-600 ml-auto cursor-help">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                        <span class="info-tooltip info-tooltip-bottom text-left text-white">Adjust barcode line colors and box styling.</span>
+                                    </span>
                                 </h4>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="flex flex-col gap-2">
@@ -491,6 +519,10 @@
                         <div class="space-y-6 border-t border-[var(--border-main)] pt-8">
                             <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2 text-slate-400">
                                 Surface Layers
+                                <span class="info-trigger text-slate-600 ml-auto cursor-help">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                    <span class="info-tooltip info-tooltip-bottom text-left text-white">Configure background aesthetics and secondary data visibility.</span>
+                                </span>
                             </h4>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
                                 <div>
@@ -524,6 +556,10 @@
                             <div class="col-span-2">
                                 <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4 border-b border-[var(--border-main)] pb-2 text-slate-400">
                                     Proportions
+                                    <span class="info-trigger text-slate-600 ml-auto cursor-help">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                        <span class="info-tooltip info-tooltip-bottom text-left text-white">Fine-tune barcode dimensions for scanner readability.</span>
+                                    </span>
                                 </h4>
                             </div>
                             <div>
@@ -640,6 +676,53 @@
             window.closeClearAll(); 
             window.showToast("Registry cleared."); 
             syncToCloud();
+        };
+
+        window.triggerResetDefault = function() { document.getElementById('resetModal').classList.remove('modal-hidden'); };
+        window.closeResetDefault = function() { document.getElementById('resetModal').classList.add('modal-hidden'); };
+        window.confirmResetDefault = function() { 
+            barcodes = []; 
+            categoriesMemory = []; 
+            isFirstTime = true;
+            
+            const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+            const setChk = (id, c) => { const el = document.getElementById(id); if (el) el.checked = c; };
+
+            // Reset main input fields
+            setVal('productName', '');
+            setVal('productSizes', '');
+            setVal('productPrice', '');
+            setVal('barcodeValue', '');
+            setVal('barcodeFormat', 'EAN13');
+            setVal('barcodeCategory', '');
+            setVal('registrySearch', '');
+            
+            // Reset settings UI
+            setVal('lineColor', '#000000');
+            setVal('textColor', '#000000');
+            setVal('nameColor', '#000000');
+            setVal('priceColor', '#000000');
+            setVal('barcodeBg', '#ffffff');
+            setVal('currencySymbol', 'R');
+            setVal('nameSize', 10);
+            setVal('nameFont', 'Sans');
+            setVal('bgColor', '#F7F7F8');
+            setChk('displayValue', true);
+            setChk('displayCategory', true);
+            setVal('barWidth', 2);
+            setVal('barHeight', 50);
+            setVal('bgPosX', 50);
+            setVal('bgPosY', 50);
+            
+            window.removeBackgroundImage();
+            window.setTemplate('node'); 
+            
+            updateCategorySelects(); 
+            window.renderList(); 
+            window.closeResetDefault(); 
+            
+            syncToCloud();
+            window.showAdvisory(); // Pop warning message again
         };
 
         function validateValueForFormat(value, format) {
