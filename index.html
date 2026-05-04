@@ -227,7 +227,7 @@
                         Product Size/Variant
                         <span class="info-trigger text-slate-500 cursor-help">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            <span class="info-tooltip info-tooltip-bottom text-left text-white">Separate variants with commas (e.g. S, M, L). Generates a barcode for each variant.</span>
+                            <span class="info-tooltip info-tooltip-bottom text-left text-white">Separate with commas (e.g. S, M, L). Use colon for per-variant pricing (e.g. S:20, M:25, L:30).</span>
                         </span>
                     </label>
                     <input type="text" id="productSizes" placeholder="e.g. S, M, L" class="w-full px-4 py-3 rounded-xl neo-input text-sm">
@@ -287,6 +287,11 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     Add Entry
                 </button>
+                <button onclick="document.getElementById('csvImportInput').click()" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-emerald-600/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    Bulk CSV
+                </button>
+                <input type="file" id="csvImportInput" accept=".csv" class="hidden" onchange="window.handleCSVImport(event)">
                 <button onclick="window.toggleSettings(true)" class="bg-slate-800/50 hover:bg-slate-700/50 text-slate-200 px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-slate-700/50">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
                     Barcode settings
@@ -429,154 +434,146 @@
             </div>
 
             <div class="p-8 overflow-y-auto">
-                <div class="flex flex-col lg:flex-row gap-12">
-                    <div class="flex-1 space-y-8">
-                        <div class="space-y-4">
-                             <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-[var(--border-main)] pb-2 text-slate-400">
-                                Active Template
-                                <span class="info-trigger text-slate-600 ml-auto cursor-help">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                    <span class="info-tooltip info-tooltip-bottom text-left text-white">
-                                        • <strong>Node:</strong> Minimal card with title and price.<br>
-                                        • <strong>Tag:</strong> Complete retail layout with category, customer care, size pill and bold pricing.
-                                    </span>
-                                </span>
-                             </h4>
+                <div class="flex flex-col xl:flex-row gap-8">
+                    <div class="flex-1 space-y-6">
+                        <!-- Template Selector -->
+                        <div class="bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6">
+                             <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-700/50 pb-3 mb-4">Active Template</h4>
                              <div class="flex gap-4">
                                  <button onclick="window.setTemplate('node')" id="btnNodeTemp" class="flex-1 p-4 rounded-xl border border-blue-600 bg-blue-600/10 text-white font-bold text-xs transition-all">DASHBOARD NODE</button>
                                  <button onclick="window.setTemplate('tag')" id="btnTagTemp" class="flex-1 p-4 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 font-bold text-xs transition-all">RETAIL TAG</button>
                              </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                            <div class="space-y-6">
-                                <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-[var(--border-main)] pb-2 text-slate-400">
-                                    Typography
-                                    <span class="info-trigger text-slate-600 ml-auto cursor-help">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                        <span class="info-tooltip info-tooltip-bottom text-left text-white">Adjust colors, sizing, and fonts for all text elements.</span>
-                                    </span>
-                                </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Typography Card -->
+                            <div class="bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6 space-y-5">
+                                <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-700/50 pb-3">Typography</h4>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div class="flex flex-col gap-2">
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Name Color</label>
+                                    <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                        <label class="block text-[9px] font-bold text-slate-500 uppercase mb-2">Name Color</label>
                                         <input type="color" id="nameColor" value="#000000" oninput="window.updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
                                     </div>
-                                    <div class="flex flex-col gap-2">
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Price Color</label>
+                                    <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                        <label class="block text-[9px] font-bold text-slate-500 uppercase mb-2">Price Color</label>
                                         <input type="color" id="priceColor" value="#000000" oninput="window.updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-4 text-slate-400">
-                                    <div>
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 text-slate-400">Currency Symbol</label>
-                                        <input type="text" id="currencySymbol" value="R" oninput="window.updatePreview()" class="w-full px-3 py-2 rounded-lg neo-input text-xs bg-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 text-slate-400">Name Size</label>
-                                        <input type="range" id="nameSize" min="8" max="24" step="1" value="10" oninput="window.updatePreview()" class="w-full h-1 bg-slate-300 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
-                                    </div>
+                                <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                    <label class="block text-[9px] font-bold text-slate-500 uppercase mb-3">Name Size</label>
+                                    <input type="range" id="nameSize" min="8" max="24" step="1" value="10" oninput="window.updatePreview()" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
                                 </div>
-                                <div class="flex flex-col gap-2 text-slate-400">
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Number Color</label>
-                                    <input type="color" id="textColor" value="#000000" oninput="window.updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
+                                <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                    <label class="block text-[9px] font-bold text-slate-500 uppercase mb-3">Font Family</label>
+                                    <select id="nameFont" onchange="window.updatePreview()" class="w-full px-3 py-2 rounded-lg neo-input text-xs bg-transparent">
+                                        <option value="Sans">Sans (Inter)</option>
+                                        <option value="Mono">Mono (Roboto Mono)</option>
+                                        <option value="Serif">Serif (Playfair)</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="space-y-6">
-                                <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-[var(--border-main)] pb-2 text-slate-400">
-                                    Encoding Visuals
-                                    <span class="info-trigger text-slate-600 ml-auto cursor-help">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                        <span class="info-tooltip info-tooltip-bottom text-left text-white">Adjust barcode line colors and box styling.</span>
-                                    </span>
-                                </h4>
+                            <!-- Encoding Visuals Card -->
+                            <div class="bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6 space-y-5">
+                                <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-700/50 pb-3">Encoding Visuals</h4>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div class="flex flex-col gap-2">
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest text-slate-400">Line Color</label>
+                                    <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                        <label class="block text-[9px] font-bold text-slate-500 uppercase mb-2">Line Color</label>
                                         <input type="color" id="lineColor" value="#000000" oninput="window.updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
                                     </div>
-                                    <div class="flex flex-col gap-2">
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest text-slate-400 text-slate-400">Box Color</label>
-                                        <input type="color" id="barcodeBg" value="#ffffff" oninput="window.updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent text-slate-400">
+                                    <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                        <label class="block text-[9px] font-bold text-slate-500 uppercase mb-2">Number Color</label>
+                                        <input type="color" id="textColor" value="#000000" oninput="window.updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
                                     </div>
                                 </div>
-                                <div class="space-y-3 pt-4 text-slate-400">
-                                    <label class="flex items-center cursor-pointer text-slate-400">
+                                <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                    <label class="block text-[9px] font-bold text-slate-500 uppercase mb-2">Barcode Box</label>
+                                    <input type="color" id="barcodeBg" value="#ffffff" oninput="window.updatePreview()" class="w-8 h-8 rounded-lg cursor-pointer border-0 p-0 bg-transparent">
+                                </div>
+                                <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                    <label class="block text-[9px] font-bold text-slate-500 uppercase mb-2">Currency Symbol</label>
+                                    <input type="text" id="currencySymbol" value="R" oninput="window.updatePreview()" class="w-full px-3 py-2 rounded-lg neo-input text-xs bg-transparent">
+                                </div>
+                            </div>
+
+                            <!-- Surface & Branding Card -->
+                            <div class="bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6 space-y-5">
+                                <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-700/50 pb-3">Surface & Branding</h4>
+                                <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                    <label class="block text-[9px] font-bold text-slate-500 uppercase mb-2">Card Background</label>
+                                    <input type="color" id="bgColor" value="#F7F7F8" oninput="window.updatePreview()" class="w-10 h-10 rounded-xl cursor-pointer border-0 p-0 bg-transparent">
+                                </div>
+                                <label class="flex items-center justify-center w-full h-12 bg-black/20 border border-slate-800 rounded-xl cursor-pointer hover:bg-slate-800/50 transition-all text-[10px] font-black uppercase tracking-widest text-slate-300">
+                                    Upload Card Texture
+                                    <input type="file" id="bgImageInput" accept="image/*" onchange="window.handleImageUpload(event)" class="hidden">
+                                </label>
+                                <button id="removeImgBtn" onclick="window.removeBackgroundImage()" class="hidden text-[10px] font-bold text-pink-500 hover:underline uppercase">Clear Texture</button>
+                                <label class="flex items-center justify-center w-full h-12 bg-black/20 border border-slate-800 rounded-xl cursor-pointer hover:bg-slate-800/50 transition-all text-[10px] font-black uppercase tracking-widest text-slate-300">
+                                    Upload Company Logo
+                                    <input type="file" id="logoImageInput" accept="image/*" onchange="window.handleLogoUpload(event)" class="hidden">
+                                </label>
+                                <button id="removeLogoBtn" onclick="window.removeLogoImage()" class="hidden text-[10px] font-bold text-pink-500 hover:underline uppercase">Clear Logo</button>
+                                <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                    <label class="block text-[9px] font-bold text-slate-500 uppercase mb-2">Customer Care Text</label>
+                                    <input type="text" id="customerCare" value="Customer Care: 0860 30 30 30" oninput="window.updatePreview()" class="w-full px-3 py-2 rounded-lg neo-input text-xs bg-transparent">
+                                </div>
+                            </div>
+
+                            <!-- Layout Toggles Card -->
+                            <div class="bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6 space-y-5">
+                                <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-700/50 pb-3">Layout Toggles</h4>
+                                <div class="space-y-3">
+                                    <label class="flex items-center cursor-pointer p-3 bg-black/20 rounded-xl border border-slate-800 hover:bg-slate-800/50 transition-colors">
                                         <input type="checkbox" id="displayValue" checked onchange="window.updatePreview()" class="sr-only peer">
-                                        <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5 relative"></div>
-                                        <span class="ml-3 text-[10px] font-bold uppercase text-slate-400">Display Number</span>
+                                        <div class="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4 relative"></div>
+                                        <span class="ml-3 text-[10px] font-bold uppercase text-slate-300 tracking-widest">Display Number</span>
                                     </label>
-                                    <label class="flex items-center cursor-pointer text-slate-400">
+                                    <label class="flex items-center cursor-pointer p-3 bg-black/20 rounded-xl border border-slate-800 hover:bg-slate-800/50 transition-colors">
                                         <input type="checkbox" id="displayCategory" checked onchange="window.updatePreview()" class="sr-only peer">
-                                        <div class="w-10 h-5 bg-slate-300 dark:bg-slate-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5 relative"></div>
-                                        <span class="ml-3 text-[10px] font-bold uppercase text-slate-400">Display Category</span>
+                                        <div class="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4 relative"></div>
+                                        <span class="ml-3 text-[10px] font-bold uppercase text-slate-300 tracking-widest">Display Category</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer p-3 bg-black/20 rounded-xl border border-slate-800 hover:bg-slate-800/50 transition-colors">
+                                        <input type="checkbox" id="displaySizePill" checked onchange="window.updatePreview()" class="sr-only peer">
+                                        <div class="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4 relative"></div>
+                                        <span class="ml-3 text-[10px] font-bold uppercase text-slate-300 tracking-widest">Size Pill</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer p-3 bg-black/20 rounded-xl border border-slate-800 hover:bg-slate-800/50 transition-colors">
+                                        <input type="checkbox" id="priceTop" onchange="window.updatePreview()" class="sr-only peer">
+                                        <div class="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4 relative"></div>
+                                        <span class="ml-3 text-[10px] font-bold uppercase text-slate-300 tracking-widest">Price at Top</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="space-y-6 border-t border-[var(--border-main)] pt-8">
-                            <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2 text-slate-400">
-                                Surface Layers
-                                <span class="info-trigger text-slate-600 ml-auto cursor-help">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                    <span class="info-tooltip info-tooltip-bottom text-left text-white">Configure background aesthetics and secondary data visibility.</span>
-                                </span>
-                            </h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Card Background</label>
-                                    <input type="color" id="bgColor" value="#F7F7F8" oninput="window.updatePreview()" class="w-10 h-10 rounded-xl cursor-pointer border-0 p-0 bg-transparent text-slate-400">
+                        <!-- Proportions Card -->
+                        <div class="bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6 space-y-5">
+                            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-700/50 pb-3">Proportions</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                    <label class="block text-[9px] font-bold text-slate-500 uppercase mb-3">Line Thickness</label>
+                                    <input type="range" id="barWidth" min="1" max="4" step="0.5" value="2" oninput="window.updatePreview()" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
                                 </div>
-                                <div class="space-y-4">
-                                    <label class="flex items-center justify-center w-full h-12 bg-slate-500/5 border border-[var(--border-main)] rounded-2xl cursor-pointer hover:bg-slate-500/10 transition-all text-[10px] font-black uppercase tracking-widest text-white">
-                                        <svg class="w-4 h-4 mr-2 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-width="2.5"/></svg>
-                                        Upload card image
-                                        <input type="file" id="bgImageInput" accept="image/*" onchange="window.handleImageUpload(event)" class="hidden">
-                                    </label>
-                                    <div class="space-y-3">
-                                        <button id="removeImgBtn" onclick="window.removeBackgroundImage()" class="hidden text-[10px] font-bold text-pink-500 hover:underline uppercase tracking-widest">Clear image</button>
-                                    </div>
-                                    <div id="imagePosControls" class="hidden space-y-4 pt-2 border-t border-[var(--border-main)]">
-                                        <div>
-                                            <label class="block text-[8px] font-black uppercase text-slate-500 mb-1 text-slate-400">Horizontal Position</label>
-                                            <input type="range" id="bgPosX" min="0" max="100" value="50" oninput="window.updatePreview()" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
-                                        </div>
-                                        <div>
-                                            <label class="block text-[8px] font-black uppercase text-slate-500 mb-1 text-slate-400">Vertical Position</label>
-                                            <input type="range" id="bgPosY" min="0" max="100" value="50" oninput="window.updatePreview()" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500 text-slate-400">
-                                        </div>
-                                    </div>
+                                <div class="p-3 bg-black/20 rounded-xl border border-slate-800">
+                                    <label class="block text-[9px] font-bold text-slate-500 uppercase mb-3">Barcode Height</label>
+                                    <input type="range" id="barHeight" min="20" max="150" step="5" value="50" oninput="window.updatePreview()" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
-                            <div class="col-span-2">
-                                <h4 class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4 border-b border-[var(--border-main)] pb-2 text-slate-400">
-                                    Proportions
-                                    <span class="info-trigger text-slate-600 ml-auto cursor-help">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                        <span class="info-tooltip info-tooltip-bottom text-left text-white">Fine-tune barcode dimensions for scanner readability.</span>
-                                    </span>
-                                </h4>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 text-slate-400 text-slate-400">Line Thickness</label>
-                                <input type="range" id="barWidth" min="1" max="4" step="0.5" value="2" oninput="window.updatePreview()" class="w-full h-1 bg-slate-300 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500 text-slate-400">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 text-slate-400 text-slate-400">Barcode Height</label>
-                                <input type="range" id="barHeight" min="20" max="150" step="5" value="50" oninput="window.updatePreview()" class="w-full h-1 bg-slate-300 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500 text-slate-400">
                             </div>
                         </div>
                     </div>
 
-                    <div class="w-full lg:w-80">
-                        <div id="livePreviewContainer" class="p-4 rounded-2xl border border-[var(--border-main)] flex flex-col items-center justify-center w-full min-h-[320px] shadow-2xl relative overflow-hidden transition-colors barcode-card-render">
-                            <div id="previewBgLayer" class="absolute inset-0 z-0 pointer-events-none transition-all duration-300"></div>
-                            <div id="previewContent" class="w-full h-full relative z-10"></div>
+                    <!-- Right Sticky Preview -->
+                    <div class="w-full xl:w-80">
+                        <div class="sticky top-0 bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6">
+                            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center justify-between">
+                                Live Preview
+                                <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                            </h4>
+                            <div id="livePreviewContainer" class="rounded-2xl border border-slate-700/50 flex flex-col items-center justify-center w-full min-h-[320px] shadow-2xl relative overflow-hidden transition-colors barcode-card-render bg-white">
+                                <div id="previewBgLayer" class="absolute inset-0 z-0 pointer-events-none transition-all duration-300"></div>
+                                <div id="previewContent" class="w-full h-full relative z-10"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -625,7 +622,7 @@
 
         const FONT_FAMILIES = { 'Sans': "'Inter', sans-serif", 'Mono': "'Roboto Mono', monospace", 'Serif': "'Playfair Display', serif" };
 
-        let currentTemplateSettings = { lineColor: "#000000", textColor: "#000000", nameColor: "#000000", priceColor: "#000000", barcodeBg: "#ffffff", currencySymbol: "R", nameSize: 10, nameFont: "Sans", background: "#F7F7F8", backgroundImage: null, bgPosX: 50, bgPosY: 50, width: 2, height: 50, displayValue: true, displayCategory: true };
+        let currentTemplateSettings = { lineColor: "#000000", textColor: "#000000", nameColor: "#000000", priceColor: "#000000", barcodeBg: "#ffffff", currencySymbol: "R", nameSize: 10, nameFont: "Sans", background: "#F7F7F8", backgroundImage: null, logoImage: null, customerCare: "Customer Care: 0860 30 30 30", bgPosX: 50, bgPosY: 50, width: 2, height: 50, displayValue: true, displayCategory: true, displaySizePill: true, priceTop: false };
 
         // Global exposure
         window.toggleSettings = function(show) { 
@@ -764,13 +761,15 @@
             currentTemplateSettings.barcodeBg = getEl('barcodeBg').value;
             currentTemplateSettings.currencySymbol = getEl('currencySymbol').value || 'R';
             currentTemplateSettings.nameSize = parseInt(getEl('nameSize').value) || 10;
+            currentTemplateSettings.nameFont = getEl('nameFont').value;
             currentTemplateSettings.background = getEl('bgColor').value;
             currentTemplateSettings.displayValue = getEl('displayValue').checked;
             currentTemplateSettings.displayCategory = getEl('displayCategory').checked;
+            currentTemplateSettings.displaySizePill = getEl('displaySizePill').checked;
+            currentTemplateSettings.priceTop = getEl('priceTop').checked;
+            currentTemplateSettings.customerCare = getEl('customerCare').value;
             currentTemplateSettings.width = parseFloat(getEl('barWidth') ? getEl('barWidth').value : 2);
             currentTemplateSettings.height = parseInt(getEl('barHeight') ? getEl('barHeight').value : 50);
-            currentTemplateSettings.bgPosX = parseInt(getEl('bgPosX').value) || 50;
-            currentTemplateSettings.bgPosY = parseInt(getEl('bgPosY').value) || 50;
 
             const bgLayer = document.getElementById('previewBgLayer');
             const content = document.getElementById('previewContent');
@@ -778,49 +777,59 @@
 
             if (currentTemplateSettings.backgroundImage) {
                 bgLayer.style.backgroundImage = 'url(' + currentTemplateSettings.backgroundImage + ')';
-                bgLayer.style.backgroundPosition = currentTemplateSettings.bgPosX + "% " + currentTemplateSettings.bgPosY + "%";
+                bgLayer.style.backgroundPosition = "center";
                 bgLayer.style.backgroundSize = "cover";
-                bgLayer.style.backgroundColor = "transparent";
-                document.getElementById('imagePosControls').classList.remove('hidden');
             } else {
                 bgLayer.style.backgroundImage = "none";
                 bgLayer.style.backgroundColor = currentTemplateSettings.background;
-                document.getElementById('imagePosControls').classList.add('hidden');
             }
             
             const font = FONT_FAMILIES[currentTemplateSettings.nameFont] || FONT_FAMILIES['Sans'];
             const size = currentTemplateSettings.nameSize;
-            const priceVal = getEl('productPrice').value;
+            const priceVal = document.getElementById('productPrice').value;
             const formattedPrice = priceVal ? currentTemplateSettings.currencySymbol + ' ' + priceVal : '';
-            const liveCat = getEl('barcodeCategory').value || 'Category Name';
+            const liveCat = document.getElementById('barcodeCategory').value || 'Category Name';
             
+            const logoHtml = currentTemplateSettings.logoImage ? `<img src="${currentTemplateSettings.logoImage}" style="height: 24px; width: auto; margin-bottom: 8px; object-fit: contain;">` : '';
+
             if (activeTemplate === 'node') {
-                content.innerHTML = '<div class="flex flex-col items-center justify-center h-full w-full">' +
-                    (currentTemplateSettings.displayCategory ? '<p style="color: ' + currentTemplateSettings.nameColor + '; font-size: 8px; font-weight: bold; margin-bottom: 0.25rem; text-align: center; text-transform: uppercase;">' + liveCat + '</p>' : '') +
-                    '<p style="color: ' + currentTemplateSettings.nameColor + '; font-size: ' + size + 'px; font-family: ' + font + '; font-weight: bold; margin-bottom: 1rem; text-align: center; line-height: 1.2; max-width: 100%; word-break: break-word;">ANALYTICS PREVIEW</p>' +
-                    '<div style="background-color: ' + currentTemplateSettings.barcodeBg + '; padding: 1rem; border-radius: 0.75rem; border: 1px solid #ddd; display: flex; flex-direction: column; align-items: center;">' +
-                        '<svg id="previewBarcode"></svg>' +
-                        (currentTemplateSettings.displayValue ? '<p style="color: ' + currentTemplateSettings.textColor + '; margin-top: 0.5rem; font-size: 10px; font-family: monospace; font-weight: bold;">123456789012</p>' : '') +
-                    '</div>' +
-                    (formattedPrice ? '<p style="color: ' + currentTemplateSettings.priceColor + '; margin-top: 1rem; font-weight: 900; font-size: 1.25rem;">' + formattedPrice + '</p>' : '') +
-                '</div>';
+                content.innerHTML = `<div class="flex flex-col items-center justify-center h-full w-full p-4">
+                    ${logoHtml}
+                    ${currentTemplateSettings.priceTop && formattedPrice ? `<p style="color: ${currentTemplateSettings.priceColor}; margin-bottom: 0.5rem; font-weight: 900; font-size: 1.1rem;">${formattedPrice}</p>` : ''}
+                    ${currentTemplateSettings.displayCategory ? `<p style="color: ${currentTemplateSettings.nameColor}; font-size: 8px; font-weight: bold; margin-bottom: 0.25rem; text-align: center; text-transform: uppercase; opacity: 0.7;">${liveCat}</p>` : ''}
+                    <p style="color: ${currentTemplateSettings.nameColor}; font-size: ${size}px; font-family: ${font}; font-weight: bold; margin-bottom: 1rem; text-align: center; line-height: 1.2; max-width: 100%; word-break: break-word;">ANALYTICS PREVIEW</p>
+                    <div style="background-color: ${currentTemplateSettings.barcodeBg}; padding: 1rem; border-radius: 0.75rem; border: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <svg id="previewBarcode"></svg>
+                        ${currentTemplateSettings.displayValue ? `<p style="color: ${currentTemplateSettings.textColor}; margin-top: 0.5rem; font-size: 10px; font-family: monospace; font-weight: bold;">123456789012</p>` : ''}
+                    </div>
+                    ${!currentTemplateSettings.priceTop && formattedPrice ? `<p style="color: ${currentTemplateSettings.priceColor}; margin-top: 1rem; font-weight: 900; font-size: 1.1rem;">${formattedPrice}</p>` : ''}
+                </div>`;
             } else {
-                content.innerHTML = '<div class="flex flex-col items-center w-full h-full justify-center px-2">' +
-                    (currentTemplateSettings.displayCategory ? '<p style="color: ' + currentTemplateSettings.nameColor + '; font-size: 8px; font-weight: bold; margin-bottom: 0.5rem; text-align: center; text-transform: uppercase;">' + liveCat + '</p>' : '') +
-                    '<p style="color: ' + currentTemplateSettings.nameColor + '; font-size: ' + size + 'px; font-family: ' + font + '; font-weight: 900; margin-bottom: 1rem; text-align: center; text-transform: uppercase; max-width: 100%; word-break: break-word;">PRODUCT NODE NAME</p>' +
-                    '<div style="width: 100%; background-color: ' + currentTemplateSettings.barcodeBg + '; padding: 0.5rem; border-radius: 0.25rem; display: flex; flex-direction: column; align-items: center; margin-bottom: 0.5rem; border: 1px solid #e2e8f0;">' +
-                         '<svg id="previewBarcode"></svg>' +
-                         (currentTemplateSettings.displayValue ? '<p style="color: ' + currentTemplateSettings.textColor + '; margin-top: 0.25rem; font-size: 8px; font-family: monospace; font-weight: bold;">123456789012</p>' : '') +
-                    '</div>' +
-                    '<div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; margin-bottom: 1rem;">' +
-                        '<p style="color: ' + currentTemplateSettings.nameColor + '; font-size: 8px; font-weight: 900; text-transform: uppercase; opacity: 0.6;">Customer Care: 0860 30 30 30</p>' +
-                    '</div>' +
-                    '<div style="width: 100%; padding: 0.5rem 1rem; border-radius: 9999px; text-align: center; color: white; margin-bottom: 0.5rem; font-weight: 900; font-size: 1.25rem; background-color: #1e3a8a">S/M</div>' +
-                    '<p style="color: ' + currentTemplateSettings.priceColor + '; font-weight: 900; font-size: 1.5rem; letter-spacing: -0.05em;">' + (formattedPrice || (currentTemplateSettings.currencySymbol + ' 35.00')) + '</p>' +
-                '</div>';
+                content.innerHTML = `<div class="flex flex-col items-center w-full h-full justify-center px-4 py-6">
+                    ${logoHtml}
+                    ${currentTemplateSettings.priceTop && formattedPrice ? `<p style="color: ${currentTemplateSettings.priceColor}; font-weight: 900; font-size: 1.5rem; margin-bottom: 0.5rem; letter-spacing: -0.05em;">${formattedPrice}</p>` : ''}
+                    ${currentTemplateSettings.displayCategory ? `<p style="color: ${currentTemplateSettings.nameColor}; font-size: 8px; font-weight: bold; margin-bottom: 0.5rem; text-align: center; text-transform: uppercase; opacity: 0.7;">${liveCat}</p>` : ''}
+                    <p style="color: ${currentTemplateSettings.nameColor}; font-size: ${size}px; font-family: ${font}; font-weight: 900; margin-bottom: 1rem; text-align: center; text-transform: uppercase; max-width: 100%; word-break: break-word;">PRODUCT NODE NAME</p>
+                    <div style="width: 100%; background-color: ${currentTemplateSettings.barcodeBg}; padding: 0.5rem; border-radius: 0.25rem; display: flex; flex-direction: column; align-items: center; margin-bottom: 0.5rem; border: 1px solid #e2e8f0;">
+                         <svg id="previewBarcode"></svg>
+                         ${currentTemplateSettings.displayValue ? `<p style="color: ${currentTemplateSettings.textColor}; margin-top: 0.25rem; font-size: 8px; font-family: monospace; font-weight: bold;">123456789012</p>` : ''}
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; margin-bottom: 1rem;">
+                        <p style="color: ${currentTemplateSettings.nameColor}; font-size: 8px; font-weight: 900; text-transform: uppercase; opacity: 0.6;">${currentTemplateSettings.customerCare}</p>
+                    </div>
+                    ${currentTemplateSettings.displaySizePill ? `<div style="width: 100%; padding: 0.5rem 1rem; border-radius: 9999px; text-align: center; color: white; margin-bottom: 0.5rem; font-weight: 900; font-size: 1.25rem; background-color: #1e3a8a">S/M</div>` : ''}
+                    ${!currentTemplateSettings.priceTop && formattedPrice ? `<p style="color: ${currentTemplateSettings.priceColor}; font-weight: 900; font-size: 1.5rem; letter-spacing: -0.05em;">${formattedPrice}</p>` : ''}
+                </div>`;
             }
 
-            try { JsBarcode("#previewBarcode", "123456789012", { format: document.getElementById('barcodeFormat').value, lineColor: currentTemplateSettings.lineColor, background: "transparent", width: 2, height: 40, displayValue: false }); } catch (e) {}
+            let previewData = "123456789012";
+            const currentFormat = document.getElementById('barcodeFormat').value;
+            if (currentFormat === 'EAN13') previewData = "123456789012";
+            if (currentFormat === 'EAN8') previewData = "1234567";
+            if (currentFormat === 'UPC') previewData = "12345678901";
+            if (currentFormat === 'pharmacode') previewData = "1234";
+
+            try { JsBarcode("#previewBarcode", previewData, { format: currentFormat, lineColor: currentTemplateSettings.lineColor, background: "transparent", width: currentTemplateSettings.width, height: currentTemplateSettings.height, displayValue: false }); } catch (e) { console.warn("JsBarcode Preview Error:", e); }
         };
 
         window.addBarcode = function(skipValidation) {
@@ -855,7 +864,7 @@
             const categoryName = categoryInput.value.trim() || "Default Category";
             const baseName = nameInp.value.trim();
             const sizesRaw = sizeInp.value.trim();
-            const price = priceInp.value.trim();
+            const globalPrice = priceInp.value.trim();
 
             if (!baseName && !value) { window.showToast("Identity parameters required."); return; }
             if (!categoriesMemory.includes(categoryName)) { categoriesMemory.push(categoryName); updateCategorySelects(); }
@@ -863,12 +872,28 @@
             const sizes = sizesRaw ? sizesRaw.split(',').map(s => s.trim()).filter(s => s !== '') : [null];
             const timestampBase = Date.now();
 
-            sizes.forEach((size, idx) => {
+            sizes.forEach((s, idx) => {
                 let finalValue = value;
-                if (!finalValue) finalValue = Math.floor(100000000000 + Math.random() * 900000000000).toString();
-                else if (size) { try { finalValue = (BigInt(finalValue) + BigInt(idx)).toString(); } catch(e) { finalValue = finalValue + idx; } }
+                let variantName = s;
+                let variantPrice = globalPrice;
 
-                barcodes.push({ id: timestampBase + idx + Math.floor(Math.random() * 1000), name: baseName, size: size, price: price, value: finalValue, format: format, category: categoryName, template: activeTemplate, design: JSON.parse(JSON.stringify(currentTemplateSettings)) });
+                // Handle variant:price syntax
+                if (s && s.includes(':')) {
+                    const parts = s.split(':');
+                    variantName = parts[0].trim();
+                    variantPrice = parts[1].trim();
+                }
+
+                if (!finalValue) {
+                    if (format === 'EAN13') finalValue = Math.floor(100000000000 + Math.random() * 900000000000).toString();
+                    else if (format === 'EAN8') finalValue = Math.floor(1000000 + Math.random() * 9000000).toString();
+                    else if (format === 'UPC') finalValue = Math.floor(10000000000 + Math.random() * 90000000000).toString();
+                    else if (format === 'pharmacode') finalValue = Math.floor(3 + Math.random() * 131067).toString();
+                    else finalValue = Math.floor(100000000000 + Math.random() * 900000000000).toString();
+                }
+                else if (variantName) { try { finalValue = (BigInt(finalValue) + BigInt(idx)).toString(); } catch(e) { finalValue = finalValue + idx; } }
+
+                barcodes.push({ id: timestampBase + idx + Math.floor(Math.random() * 1000), name: baseName, size: variantName, price: variantPrice, value: finalValue, format: format, category: categoryName, template: activeTemplate, design: JSON.parse(JSON.stringify(currentTemplateSettings)) });
             });
             
             window.renderList();
@@ -910,27 +935,41 @@
                     if (design.backgroundImage) { 
                         card.style.backgroundImage = 'url(' + design.backgroundImage + ')'; 
                         card.style.backgroundSize = 'cover'; 
-                        card.style.backgroundPosition = (design.bgPosX || 50) + '% ' + (design.bgPosY || 50) + '%';
+                        card.style.backgroundPosition = 'center';
                     }
                     const displayPrice = item.price ? design.currencySymbol + ' ' + item.price : '';
+                    const logoHtml = design.logoImage ? `<img src="${design.logoImage}" style="height: 24px; width: auto; margin-bottom: 8px; object-fit: contain;">` : '';
+                    const font = FONT_FAMILIES[design.nameFont] || FONT_FAMILIES['Sans'];
                     
-                    let inner = item.template === 'node' ? 
-                        (design.displayCategory ? '<p class="font-bold text-[8px] uppercase opacity-70 mb-1" style="color: ' + design.nameColor + '">' + item.category + '</p>' : '') +
-                        '<p class="font-bold mb-4 text-center truncate w-full" style="color: ' + design.nameColor + '; font-size: ' + design.nameSize + 'px;">' + item.name + (item.size ? ' (' + item.size + ')' : '') + '</p>' +
-                        '<div style="background-color: ' + design.barcodeBg + '; padding: 1rem; border-radius: 0.75rem; border: 1px solid #ddd; display: flex; flex-direction: column; align-items: center;">' +
-                            '<svg id="barcode-' + item.id + '"></svg>' +
-                            (design.displayValue ? '<p class="mt-2 text-[10px] font-mono font-bold" style="color: ' + design.textColor + '">' + item.value + '</p>' : '') +
-                        '</div>' +
-                        (displayPrice ? '<p style="color: ' + design.priceColor + '; margin-top: 1rem; font-weight: 900; font-size: 1.1rem;">' + displayPrice + '</p>' : '')
-                    :
-                        (design.displayCategory ? '<p class="font-bold text-[8px] uppercase opacity-70 mb-1" style="color: ' + design.nameColor + '">' + item.category + '</p>' : '') +
-                        '<p class="font-black uppercase text-center mb-4 leading-none" style="color: ' + design.nameColor + '; font-size: ' + design.nameSize + 'px;">' + item.name + '</p>' +
-                        '<div style="background-color: ' + design.barcodeBg + '; padding: 0.5rem; border-radius: 0.25rem; display: flex; flex-direction: column; align-items: center; margin-bottom: 0.5rem; border: 1px solid #e2e8f0;">' +
-                             '<svg id="barcode-' + item.id + '"></svg>' +
-                             (design.displayValue ? '<p style="color: ' + design.textColor + '; margin-top: 2px; font-size: 8px; font-family: monospace; font-weight: bold;">' + item.value + '</p>' : '') +
-                        '</div>' +
-                        '<div class="w-full px-4 py-2 rounded-full text-center text-white mb-2 font-black text-xl leading-none" style="background-color: #1e3a8a">' + (item.size || '-') + '</div>' +
-                        '<p class="font-black text-2xl tracking-tighter" style="color: ' + design.priceColor + '">' + (displayPrice || 'N/A') + '</p>';
+                    let inner = item.template === 'node' ? `
+                        <div class="flex flex-col items-center justify-center w-full">
+                            ${logoHtml}
+                            ${design.priceTop && displayPrice ? `<p style="color: ${design.priceColor}; margin-bottom: 0.5rem; font-weight: 900; font-size: 1.1rem;">${displayPrice}</p>` : ''}
+                            ${design.displayCategory ? `<p class="font-bold text-[8px] uppercase opacity-70 mb-1" style="color: ${design.nameColor}">${item.category}</p>` : ''}
+                            <p class="font-bold mb-4 text-center truncate w-full" style="color: ${design.nameColor}; font-size: ${design.nameSize}px; font-family: ${font};">${item.name}${item.size ? ' (' + item.size + ')' : ''}</p>
+                            <div style="background-color: ${design.barcodeBg}; padding: 1rem; border-radius: 0.75rem; border: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; width: 100%;">
+                                <svg id="barcode-${item.id}"></svg>
+                                ${design.displayValue ? `<p class="mt-2 text-[10px] font-mono font-bold" style="color: ${design.textColor}">${item.value}</p>` : ''}
+                            </div>
+                            ${!design.priceTop && displayPrice ? `<p style="color: ${design.priceColor}; margin-top: 1rem; font-weight: 900; font-size: 1.1rem;">${displayPrice}</p>` : ''}
+                        </div>
+                    ` : `
+                        <div class="flex flex-col items-center w-full">
+                            ${logoHtml}
+                            ${design.priceTop && displayPrice ? `<p style="color: ${design.priceColor}; font-weight: 900; font-size: 1.5rem; margin-bottom: 0.5rem; letter-spacing: -0.05em;">${displayPrice}</p>` : ''}
+                            ${design.displayCategory ? `<p class="font-bold text-[8px] uppercase opacity-70 mb-1" style="color: ${design.nameColor}">${item.category}</p>` : ''}
+                            <p class="font-black uppercase text-center mb-4 leading-none" style="color: ${design.nameColor}; font-size: ${design.nameSize}px; font-family: ${font};">${item.name}</p>
+                            <div style="background-color: ${design.barcodeBg}; padding: 0.5rem; border-radius: 0.25rem; display: flex; flex-direction: column; align-items: center; margin-bottom: 0.5rem; border: 1px solid #e2e8f0; width: 100%;">
+                                 <svg id="barcode-${item.id}"></svg>
+                                 ${design.displayValue ? `<p style="color: ${design.textColor}; margin-top: 2px; font-size: 8px; font-family: monospace; font-weight: bold;">${item.value}</p>` : ''}
+                            </div>
+                            <div class="flex flex-col items-center gap-1 mb-4">
+                                <p style="color: ${design.nameColor}; font-size: 8px; font-weight: 900; text-transform: uppercase; opacity: 0.6;">${design.customerCare}</p>
+                            </div>
+                            ${design.displaySizePill ? `<div class="w-full px-4 py-2 rounded-full text-center text-white mb-2 font-black text-xl leading-none" style="background-color: #1e3a8a">${item.size || '-'}</div>` : ''}
+                            ${!design.priceTop && displayPrice ? `<p class="font-black text-2xl tracking-tighter" style="color: ${design.priceColor}">${displayPrice}</p>` : ''}
+                        </div>
+                    `;
 
                     card.innerHTML = '<div class="absolute top-4 right-4 flex gap-2 no-print opacity-0 group-hover:opacity-100 transition-all z-20"><button onclick="window.handlePrint(' + item.id + ')" class="p-1.5 bg-black/20 rounded hover:text-blue-500"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button><button onclick="window.removeBarcode(' + item.id + ')" class="p-1.5 bg-black/20 rounded hover:text-pink-500"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div><div class="relative z-10 flex flex-col items-center justify-center w-full h-full">' + inner + '</div>';
                     grid.appendChild(card);
@@ -940,14 +979,14 @@
                     pCard.style.backgroundColor = design.background;
                     if (design.backgroundImage) { 
                         pCard.style.backgroundImage = 'url(' + design.backgroundImage + ')'; 
-                        pCard.style.backgroundPosition = (design.bgPosX || 50) + '% ' + (design.bgPosY || 50) + '%';
+                        pCard.style.backgroundPosition = 'center';
                         pCard.style.backgroundSize = 'cover'; 
                     }
                     pCard.innerHTML = '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%;">' + inner + '</div>'; 
                     pCont.appendChild(pCard);
 
                     try {
-                        const opts = { format: item.format, lineColor: design.lineColor, background: "transparent", width: 2, height: 50, displayValue: false, margin: 0 };
+                        const opts = { format: item.format, lineColor: design.lineColor, background: "transparent", width: design.width, height: design.height, displayValue: false, margin: 0 };
                         JsBarcode("#barcode-" + item.id, item.value, opts);
                         const pSvg = pCard.querySelector('svg');
                         if (pSvg) {
@@ -989,6 +1028,128 @@
             if (document.getElementById('removeImgBtn')) document.getElementById('removeImgBtn').classList.add('hidden'); 
             window.updatePreview(); syncToCloud(); 
         };
+
+        window.handleLogoUpload = function(e) {
+            const r = new FileReader();
+            r.onload = (ev) => {
+                currentTemplateSettings.logoImage = ev.target.result;
+                if (document.getElementById('removeLogoBtn')) document.getElementById('removeLogoBtn').classList.remove('hidden');
+                window.updatePreview(); syncToCloud();
+            };
+            if (e.target.files[0]) r.readAsDataURL(e.target.files[0]);
+        };
+
+        window.removeLogoImage = function() {
+            currentTemplateSettings.logoImage = null;
+            const inp = document.getElementById('logoImageInput');
+            if (inp) inp.value = '';
+            if (document.getElementById('removeLogoBtn')) document.getElementById('removeLogoBtn').classList.add('hidden');
+            window.updatePreview(); syncToCloud();
+        };
+
+        window.handleCSVImport = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const r = new FileReader();
+            r.onload = (ev) => {
+                const text = ev.target.result;
+                const rows = text.split(/\r?\n/).filter(row => row.trim() !== '');
+                if (rows.length < 2) return;
+
+                const parseRow = (row) => {
+                    const cells = [];
+                    let cell = '';
+                    let inQuotes = false;
+                    for (let i = 0; i < row.length; i++) {
+                        const char = row[i];
+                        if (char === '"') inQuotes = !inQuotes;
+                        else if (char === ',' && !inQuotes) { cells.push(cell.trim().replace(/^"|"$/g, '')); cell = ''; }
+                        else cell += char;
+                    }
+                    cells.push(cell.trim().replace(/^"|"$/g, ''));
+                    return cells;
+                };
+
+                const headers = parseRow(rows[0]).map(h => h.toLowerCase());
+                const getCol = (aliases) => {
+                    for (const a of aliases) {
+                        const idx = headers.indexOf(a);
+                        if (idx !== -1) return idx;
+                    }
+                    return -1;
+                };
+
+                const colMap = {
+                    name: getCol(['product name', 'name', 'product', 'title', 'item']),
+                    sku: getCol(['sku', 'barcode', 'code', 'upc', 'ean', 'value']),
+                    category: getCol(['category', 'dept', 'group', 'type']),
+                    defaultPrice: getCol(['default price']),
+                    variantPrice: getCol(['variant price']),
+                    attr1: getCol(['attribute 1']),
+                    val1: getCol(['value 1']),
+                    attr2: getCol(['attribute 2']),
+                    val2: getCol(['value 2']),
+                    attr3: getCol(['attribute 3']),
+                    val3: getCol(['value 3'])
+                };
+
+                let count = 0;
+                for (let i = 1; i < rows.length; i++) {
+                    const cells = parseRow(rows[i]);
+                    const name = colMap.name !== -1 ? cells[colMap.name] : 'Unnamed Product';
+                    const value = colMap.sku !== -1 ? cells[colMap.sku] : '';
+                    const cat = colMap.category !== -1 ? cells[colMap.category] : 'CSV Import';
+
+                    // Price Logic: Variant Price takes precedence over Default Price
+                    let price = '';
+                    if (colMap.variantPrice !== -1 && cells[colMap.variantPrice]) {
+                        price = cells[colMap.variantPrice];
+                    } else if (colMap.defaultPrice !== -1 && cells[colMap.defaultPrice]) {
+                        price = cells[colMap.defaultPrice];
+                    }
+
+                    // Attribute Logic: Combine Attribute 1/2/3 and Value 1/2/3
+                    let variantParts = [];
+                    const addAttr = (aIdx, vIdx) => {
+                        if (aIdx !== -1 && vIdx !== -1 && cells[aIdx] && cells[vIdx]) {
+                            variantParts.push(cells[aIdx] + ': ' + cells[vIdx]);
+                        } else if (vIdx !== -1 && cells[vIdx]) {
+                            variantParts.push(cells[vIdx]);
+                        }
+                    };
+                    addAttr(colMap.attr1, colMap.val1);
+                    addAttr(colMap.attr2, colMap.val2);
+                    addAttr(colMap.attr3, colMap.val3);
+                    const size = variantParts.join(', ');
+
+                    if (name === 'Unnamed Product' && !value) continue;
+
+                    if (!categoriesMemory.includes(cat)) categoriesMemory.push(cat);
+                    
+                    barcodes.push({
+                        id: Date.now() + i + Math.floor(Math.random() * 1000),
+                        name: name, size: size, price: price, 
+                        value: value || Math.floor(100000000000 + Math.random() * 900000000000).toString(),
+                        format: 'EAN13', category: cat, template: activeTemplate, design: JSON.parse(JSON.stringify(currentTemplateSettings))
+                    });
+                    count++;
+                }
+                updateCategorySelects(); window.renderList(); syncToCloud(); window.showToast(count + " items imported.");
+                e.target.value = ''; // Reset input
+            };
+            r.readAsText(file);
+        };
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'f') { e.preventDefault(); const s = document.getElementById('registrySearch'); if (s) s.focus(); }
+            if ((e.metaKey || e.ctrlKey) && e.key === 'p') { e.preventDefault(); window.handlePrint(); }
+            if (e.key === 'Enter') {
+                const active = document.activeElement;
+                if (active && (active.id === 'productName' || active.id === 'productSizes' || active.id === 'productPrice' || active.id === 'barcodeValue' || active.id === 'barcodeCategory')) {
+                    window.addBarcode();
+                }
+            }
+        });
         
         window.closeAdvisory = function() { document.getElementById('advisoryModal').classList.add('modal-hidden'); isFirstTime = false; syncToCloud(); };
         window.applyToAll = function() { if (barcodes.length > 0) { barcodes.forEach(i => { i.design = JSON.parse(JSON.stringify(currentTemplateSettings)); i.template = activeTemplate; }); window.renderList(); window.showToast("Design synced."); syncToCloud(); } };
