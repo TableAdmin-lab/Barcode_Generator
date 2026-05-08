@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- JsBarcode Library -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <!-- SheetJS for XLSX support -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;700&family=Playfair+Display:wght@700&display=swap');
         
@@ -502,11 +504,27 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     Add Entry
                 </button>
-                <button onclick="document.getElementById('csvImportInput').click()" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-emerald-600/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-                    Bulk CSV
-                </button>
-                <input type="file" id="csvImportInput" accept=".csv" class="hidden" onchange="window.handleCSVImport(event)">
+                <div class="flex items-center gap-2">
+                    <button onclick="document.getElementById('csvImportInput').click()" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-emerald-600/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                        Bulk CSV / XLSX
+                    </button>
+                    <!-- SKU Barcode Toggle -->
+                    <div class="flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-700/50 bg-slate-800/30 cursor-pointer group" onclick="window.toggleSkuMode()" title="When ON, SKUs from the file are used as barcode values. When OFF, barcodes are auto-generated.">
+                        <div id="skuToggleTrack" class="relative w-8 h-4 rounded-full transition-colors duration-200 bg-slate-700 flex-shrink-0">
+                            <div id="skuToggleThumb" class="absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform duration-200"></div>
+                        </div>
+                        <span class="info-trigger text-[10px] font-bold uppercase tracking-wider text-slate-400 group-hover:text-emerald-400 transition-colors whitespace-nowrap select-none">
+                            SKU → Barcode
+                            <span class="info-tooltip info-tooltip-bottom text-left text-white" style="width:220px; margin-left:-110px;">
+                                <strong>SKU → Barcode Mode:</strong><br>
+                                When <strong>ON</strong>: CSV/XLSX SKU/barcode column values are used directly as the barcode data.<br>
+                                When <strong>OFF</strong>: Barcodes are auto-generated randomly.
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <input type="file" id="csvImportInput" accept=".csv,.xlsx,.xls" class="hidden" onchange="window.handleCSVImport(event)">
                 <button onclick="window.toggleSettings(true)" class="bg-slate-800/50 hover:bg-slate-700/50 text-slate-200 px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-slate-700/50">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
                     Barcode settings
@@ -1085,6 +1103,7 @@
         let pendingAdd = null; 
         let user = null;
         let isFirstTime = true;
+        let useSkuAsBarcode = false;
 
         const FONT_FAMILIES = { 'Sans': "'Inter', sans-serif", 'Mono': "'Roboto Mono', monospace", 'Serif': "'Playfair Display', serif" };
 
@@ -1516,57 +1535,49 @@
         window.handleCSVImport = function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            const r = new FileReader();
-            r.onload = (ev) => {
-                const text = ev.target.result;
-                const rows = text.split(/\r?\n/).filter(row => row.trim() !== '');
-                if (rows.length < 2) return;
 
-                const parseRow = (row) => {
-                    const cells = [];
-                    let cell = '';
-                    let inQuotes = false;
-                    for (let i = 0; i < row.length; i++) {
-                        const char = row[i];
-                        if (char === '"') inQuotes = !inQuotes;
-                        else if (char === ',' && !inQuotes) { cells.push(cell.trim().replace(/^"|"$/g, '')); cell = ''; }
-                        else cell += char;
-                    }
-                    cells.push(cell.trim().replace(/^"|"$/g, ''));
-                    return cells;
-                };
+            const isXlsx = /\.(xlsx|xls)$/i.test(file.name);
 
-                const headers = parseRow(rows[0]).map(h => h.toLowerCase());
+            const processRows = (allRows) => {
+                // allRows is an array of arrays (header row + data rows)
+                if (allRows.length < 2) { window.showToast("File has no data rows."); return; }
+
+                const rawHeaders = allRows[0].map(h => String(h ?? '').toLowerCase().trim());
                 const getCol = (aliases) => {
                     for (const a of aliases) {
-                        const idx = headers.indexOf(a);
+                        const idx = rawHeaders.indexOf(a);
                         if (idx !== -1) return idx;
                     }
                     return -1;
                 };
 
                 const colMap = {
-                    name: getCol(['product name', 'name', 'product', 'title', 'item']),
-                    sku: getCol(['sku', 'barcode', 'code', 'upc', 'ean', 'value']),
-                    category: getCol(['category', 'dept', 'group', 'type']),
-                    defaultPrice: getCol(['default price']),
+                    name:         getCol(['product name', 'name', 'product', 'title', 'item']),
+                    sku:          getCol(['sku', 'barcode', 'code', 'upc', 'ean', 'value', 'product id']),
+                    category:     getCol(['category', 'dept', 'department', 'group', 'type']),
+                    defaultPrice: getCol(['default price', 'price', 'retail price', 'cost']),
                     variantPrice: getCol(['variant price']),
-                    attr1: getCol(['attribute 1']),
-                    val1: getCol(['value 1']),
-                    attr2: getCol(['attribute 2']),
-                    val2: getCol(['value 2']),
-                    attr3: getCol(['attribute 3']),
-                    val3: getCol(['value 3'])
+                    size:         getCol(['size', 'variant', 'variant name']),
+                    attr1:        getCol(['attribute 1']),
+                    val1:         getCol(['value 1']),
+                    attr2:        getCol(['attribute 2']),
+                    val2:         getCol(['value 2']),
+                    attr3:        getCol(['attribute 3']),
+                    val3:         getCol(['value 3'])
                 };
 
+                const fileLabel = isXlsx ? 'XLSX Import' : 'CSV Import';
                 let count = 0;
-                for (let i = 1; i < rows.length; i++) {
-                    const cells = parseRow(rows[i]);
-                    const name = colMap.name !== -1 ? cells[colMap.name] : 'Unnamed Product';
-                    const value = colMap.sku !== -1 ? cells[colMap.sku] : '';
-                    const cat = colMap.category !== -1 ? cells[colMap.category] : 'CSV Import';
 
-                    // Price Logic: Variant Price takes precedence over Default Price
+                for (let i = 1; i < allRows.length; i++) {
+                    const cells = allRows[i].map(c => String(c ?? '').trim());
+                    if (cells.every(c => c === '')) continue; // skip blank rows
+
+                    const name  = colMap.name     !== -1 ? cells[colMap.name]     : 'Unnamed Product';
+                    const value = colMap.sku       !== -1 ? cells[colMap.sku]      : '';
+                    const cat   = colMap.category  !== -1 ? (cells[colMap.category] || fileLabel) : fileLabel;
+
+                    // Price: variant price > default price
                     let price = '';
                     if (colMap.variantPrice !== -1 && cells[colMap.variantPrice]) {
                         price = cells[colMap.variantPrice];
@@ -1574,36 +1585,101 @@
                         price = cells[colMap.defaultPrice];
                     }
 
-                    // Attribute Logic: Combine Attribute 1/2/3 and Value 1/2/3
-                    let variantParts = [];
-                    const addAttr = (aIdx, vIdx) => {
-                        if (aIdx !== -1 && vIdx !== -1 && cells[aIdx] && cells[vIdx]) {
-                            variantParts.push(cells[aIdx] + ': ' + cells[vIdx]);
-                        } else if (vIdx !== -1 && cells[vIdx]) {
-                            variantParts.push(cells[vIdx]);
-                        }
-                    };
-                    addAttr(colMap.attr1, colMap.val1);
-                    addAttr(colMap.attr2, colMap.val2);
-                    addAttr(colMap.attr3, colMap.val3);
-                    const size = variantParts.join(', ');
+                    // Variant/size: direct size col, or combined attributes
+                    let size = colMap.size !== -1 ? cells[colMap.size] : '';
+                    if (!size) {
+                        const parts = [];
+                        const addAttr = (aIdx, vIdx) => {
+                            if (aIdx !== -1 && vIdx !== -1 && cells[aIdx] && cells[vIdx]) parts.push(cells[aIdx] + ': ' + cells[vIdx]);
+                            else if (vIdx !== -1 && cells[vIdx]) parts.push(cells[vIdx]);
+                        };
+                        addAttr(colMap.attr1, colMap.val1);
+                        addAttr(colMap.attr2, colMap.val2);
+                        addAttr(colMap.attr3, colMap.val3);
+                        size = parts.join(', ');
+                    }
 
                     if (name === 'Unnamed Product' && !value) continue;
 
+                    // Determine barcode value and format
+                    let finalBarcodeValue;
+                    let detectedFormat = 'EAN13';
+
+                    if (useSkuAsBarcode && value) {
+                        finalBarcodeValue = value;
+                        if      (/^\d{13}$/.test(value))        detectedFormat = 'EAN13';
+                        else if (/^\d{12}$/.test(value))        { detectedFormat = 'EAN13'; }
+                        else if (/^\d{8}$/.test(value))         detectedFormat = 'EAN8';
+                        else if (/^\d{11,12}$/.test(value))     detectedFormat = 'UPC';
+                        else if (/^[\x00-\x7F]*$/.test(value))  detectedFormat = 'CODE128';
+                    } else {
+                        finalBarcodeValue = Math.floor(100000000000 + Math.random() * 900000000000).toString();
+                        detectedFormat = 'EAN13';
+                    }
+
                     if (!categoriesMemory.includes(cat)) categoriesMemory.push(cat);
-                    
+
                     barcodes.push({
                         id: Date.now() + i + Math.floor(Math.random() * 1000),
-                        name: name, size: size, price: price, 
-                        value: value || Math.floor(100000000000 + Math.random() * 900000000000).toString(),
-                        format: 'EAN13', category: cat, template: activeTemplate, design: JSON.parse(JSON.stringify(currentTemplateSettings))
+                        name, size, price,
+                        value: finalBarcodeValue,
+                        format: detectedFormat,
+                        category: cat,
+                        template: activeTemplate,
+                        design: JSON.parse(JSON.stringify(currentTemplateSettings))
                     });
                     count++;
                 }
-                updateCategorySelects(); window.renderList(); syncToCloud(); window.showToast(count + " items imported.");
-                e.target.value = ''; // Reset input
+
+                updateCategorySelects();
+                window.renderList();
+                syncToCloud();
+                window.showToast(count + " item" + (count !== 1 ? 's' : '') + " imported from " + (isXlsx ? 'XLSX' : 'CSV') + ".");
+                e.target.value = '';
             };
-            r.readAsText(file);
+
+            if (isXlsx) {
+                // XLSX path — use SheetJS (loaded via CDN)
+                const r = new FileReader();
+                r.onload = (ev) => {
+                    try {
+                        const wb = XLSX.read(ev.target.result, { type: 'array' });
+                        const ws = wb.Sheets[wb.SheetNames[0]];
+                        // header:1 gives array-of-arrays, defval:'' fills empty cells
+                        const allRows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+                        processRows(allRows);
+                    } catch(err) {
+                        window.showToast("XLSX parse error — check file format.");
+                        console.error(err);
+                        e.target.value = '';
+                    }
+                };
+                r.readAsArrayBuffer(file);
+            } else {
+                // CSV path — plain text reader with quoted-field parser
+                const r = new FileReader();
+                r.onload = (ev) => {
+                    const text = ev.target.result;
+                    const rawRows = text.split(/\r?\n/).filter(row => row.trim() !== '');
+
+                    const parseRow = (row) => {
+                        const cells = [];
+                        let cell = '';
+                        let inQuotes = false;
+                        for (let i = 0; i < row.length; i++) {
+                            const ch = row[i];
+                            if (ch === '"') inQuotes = !inQuotes;
+                            else if (ch === ',' && !inQuotes) { cells.push(cell.trim().replace(/^"|"$/g, '')); cell = ''; }
+                            else cell += ch;
+                        }
+                        cells.push(cell.trim().replace(/^"|"$/g, ''));
+                        return cells;
+                    };
+
+                    processRows(rawRows.map(parseRow));
+                };
+                r.readAsText(file);
+            }
         };
 
         window.addEventListener('keydown', (e) => {
@@ -1679,6 +1755,19 @@
         };
         window.applyToAll = function() { if (barcodes.length > 0) { barcodes.forEach(i => { i.design = JSON.parse(JSON.stringify(currentTemplateSettings)); i.template = activeTemplate; }); window.renderList(); window.showToast("Design synced."); syncToCloud(); } };
         window.toggleTheme = function() { isDarkMode = !isDarkMode; document.body.classList.toggle('light-mode', !isDarkMode); syncToCloud(); };
+
+        window.toggleSkuMode = function() {
+            useSkuAsBarcode = !useSkuAsBarcode;
+            const track = document.getElementById('skuToggleTrack');
+            const thumb = document.getElementById('skuToggleThumb');
+            if (track) {
+                track.style.backgroundColor = useSkuAsBarcode ? '#10b981' : '#334155';
+            }
+            if (thumb) {
+                thumb.style.transform = useSkuAsBarcode ? 'translateX(16px)' : 'translateX(0)';
+            }
+            window.showToast('SKU → Barcode: ' + (useSkuAsBarcode ? 'ON' : 'OFF'));
+        };
 
         async function initFirebase() {
             try {
