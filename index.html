@@ -160,6 +160,221 @@
             color: var(--accent-blue);
             transform: scale(1.05);
         }
+
+        /* ═══ YOCO SCANNER MODAL — HERO EDITION ═══ */
+        @keyframes yocoSlideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0)    scale(1);    }
+        }
+        @keyframes yocoScanBeam {
+            0%   { top: 8%;  opacity: 0.9; }
+            48%  { opacity: 1; }
+            50%  { top: 88%; opacity: 0.9; }
+            98%  { opacity: 1; }
+            100% { top: 8%;  opacity: 0.9; }
+        }
+        @keyframes yocoGlow {
+            0%, 100% { box-shadow: 0 0 40px rgba(0,159,227,0.25), 0 0 80px rgba(0,159,227,0.08); }
+            50%       { box-shadow: 0 0 60px rgba(0,159,227,0.4),  0 0 120px rgba(0,159,227,0.15); }
+        }
+        @keyframes yocoShimmer {
+            0%   { background-position: -300% center; }
+            100% { background-position:  300% center; }
+        }
+        @keyframes yocoBadgePop {
+            0%   { transform: scale(0) rotate(-10deg); opacity: 0; }
+            70%  { transform: scale(1.15) rotate(3deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes yocoOrbit {
+            from { transform: rotate(0deg)   translateX(58px) rotate(0deg); }
+            to   { transform: rotate(360deg) translateX(58px) rotate(-360deg); }
+        }
+        @keyframes yocoOrbit2 {
+            from { transform: rotate(180deg) translateX(48px) rotate(-180deg); }
+            to   { transform: rotate(540deg) translateX(48px) rotate(-540deg); }
+        }
+        @keyframes yocoPulseRing {
+            0%   { transform: scale(1);    opacity: 0.6; }
+            100% { transform: scale(1.8);  opacity: 0;   }
+        }
+        @keyframes yocoBarFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        @keyframes checkDraw {
+            from { stroke-dashoffset: 40; }
+            to   { stroke-dashoffset: 0;  }
+        }
+
+        #yocoScannerModal {
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        #yocoScannerModal.modal-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .yoco-hero-card {
+            animation: yocoSlideUp 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+            animation: yocoGlow 4s ease-in-out infinite;
+        }
+        .yoco-scan-beam {
+            position: absolute; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.3) 20%, #00d4ff 50%, rgba(0,212,255,0.3) 80%, transparent 100%);
+            animation: yocoScanBeam 2.4s ease-in-out infinite;
+            box-shadow: 0 0 8px 2px rgba(0,212,255,0.6);
+            border-radius: 2px;
+        }
+        .yoco-orbit-dot {
+            position: absolute; width: 6px; height: 6px;
+            border-radius: 50%; background: #009fe3;
+            top: 50%; left: 50%; margin: -3px;
+            animation: yocoOrbit 6s linear infinite;
+            box-shadow: 0 0 6px #009fe3;
+        }
+        .yoco-orbit-dot-2 {
+            position: absolute; width: 4px; height: 4px;
+            border-radius: 50%; background: #00d4ff;
+            top: 50%; left: 50%; margin: -2px;
+            animation: yocoOrbit2 4s linear infinite;
+            box-shadow: 0 0 4px #00d4ff;
+            opacity: 0.7;
+        }
+        .yoco-pulse-ring {
+            position: absolute; inset: -8px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(0,159,227,0.5);
+            animation: yocoPulseRing 2.5s ease-out infinite;
+        }
+        .yoco-pulse-ring-2 {
+            animation-delay: 1.25s;
+        }
+        .yoco-buy-btn {
+            background: linear-gradient(135deg, #009fe3 0%, #00c8f0 50%, #0077cc 100%);
+            background-size: 300% auto;
+            animation: yocoShimmer 3s linear infinite;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .yoco-buy-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -60%;
+            width: 40%; height: 200%;
+            background: rgba(255,255,255,0.15);
+            transform: skewX(-20deg);
+            animation: yocoShimmer 3s linear infinite;
+        }
+        .yoco-buy-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            filter: brightness(1.12);
+            animation-play-state: paused;
+        }
+        .yoco-buy-btn:active {
+            transform: translateY(0) scale(0.99);
+        }
+        .yoco-guide-btn {
+            transition: all 0.2s ease;
+            position: relative; overflow: hidden;
+        }
+        .yoco-guide-btn:hover {
+            border-color: rgba(0,159,227,0.5) !important;
+            background: rgba(0,159,227,0.08) !important;
+            color: #fff !important;
+            transform: translateY(-1px);
+        }
+        .yoco-guide-btn:hover .yoco-guide-icon {
+            stroke: #00d4ff;
+        }
+        .yoco-bar { animation: yocoBarFlicker 1.8s ease-in-out infinite; }
+        .yoco-bar:nth-child(2) { animation-delay: 0.2s; }
+        .yoco-bar:nth-child(3) { animation-delay: 0.5s; }
+        .yoco-bar:nth-child(4) { animation-delay: 0.1s; }
+        .yoco-bar:nth-child(5) { animation-delay: 0.4s; }
+        .yoco-badge-pop { animation: yocoBadgePop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both; }
+        .check-draw { stroke-dasharray: 40; animation: checkDraw 0.4s ease 0.5s both; }
+        /* ═══ YOCO FLOATING SCANNER WIDGET ═══ */
+        @keyframes yocoWidgetIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.92); }
+            to   { opacity: 1; transform: translateY(0)    scale(1);    }
+        }
+        @keyframes yocoWidgetPing {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0,159,227,0.5); }
+            50%       { box-shadow: 0 0 0 10px rgba(0,159,227,0); }
+        }
+        @keyframes yocoWidgetBeam {
+            0%   { top: 10%; }
+            50%  { top: 82%; }
+            100% { top: 10%; }
+        }
+        @keyframes yocoFabExpand {
+            from { width: 56px; border-radius: 50%; }
+            to   { width: 220px; border-radius: 16px; }
+        }
+
+        #yocoFloatWidget {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 140;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            animation: yocoWidgetIn 0.6s cubic-bezier(0.34, 1.4, 0.64, 1) 1.5s both;
+        }
+
+        /* Bubble card */
+        #yocoFloatBubble {
+            background: linear-gradient(135deg, #07101a 0%, #0a1e30 100%);
+            border: 1px solid rgba(0,159,227,0.4);
+            border-radius: 20px;
+            padding: 16px 18px;
+            width: 240px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,159,227,0.08), 0 0 30px rgba(0,159,227,0.15);
+            transform-origin: bottom right;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        #yocoFloatBubble.yoco-bubble-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.88) translateY(12px);
+        }
+
+        /* FAB button */
+        #yocoFab {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #009fe3, #0077cc);
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 24px rgba(0,159,227,0.5), 0 2px 8px rgba(0,0,0,0.4);
+            animation: yocoWidgetPing 3s ease-in-out infinite;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            position: relative;
+        }
+        #yocoFab:hover { transform: scale(1.08); filter: brightness(1.15); }
+        #yocoFab:active { transform: scale(0.96); }
+
+        /* Notification dot */
+        #yocoFabDot {
+            position: absolute; top: 1px; right: 1px;
+            width: 13px; height: 13px; border-radius: 50%;
+            background: #ff4444;
+            border: 2px solid #07101a;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 7px; font-weight: 900; color: #fff;
+        }
+
+        .yoco-float-scan-beam {
+            position: absolute; left: 0; right: 0; height: 1.5px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            animation: yocoWidgetBeam 2s ease-in-out infinite;
+            box-shadow: 0 0 6px rgba(0,212,255,0.8);
+        }
+        @media print { #yocoFloatWidget { display: none !important; } }
     </style>
 </head>
 <body class="p-4 md:p-8 min-h-screen">
@@ -586,6 +801,257 @@
                 </button>
                 <button onclick="window.toggleSettings(false)" class="bg-blue-600 hover:bg-blue-500 text-white px-10 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
                     COMMIT CHANGES
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ YOCO FLOATING SCANNER WIDGET ═══ -->
+    <div id="yocoFloatWidget" class="no-print">
+
+        <!-- Bubble card (shown/hidden) -->
+        <div id="yocoFloatBubble">
+            <!-- Top row -->
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <!-- Mini scanner icon -->
+                    <div style="width:34px; height:34px; border-radius:10px; background:rgba(0,159,227,0.15); border:1px solid rgba(0,159,227,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; overflow:hidden;">
+                        <div class="yoco-float-scan-beam"></div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#009fe3" stroke-width="2.5"><line x1="2" y1="7" x2="22" y2="7"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="17" x2="22" y2="17"/><line x1="6" y1="3" x2="6" y2="21"/><line x1="10" y1="3" x2="10" y2="21"/></svg>
+                    </div>
+                    <div>
+                        <p style="font-size:11px; font-weight:900; color:#fff; line-height:1.2;">Yoco Scanner</p>
+                        <p style="font-size:9px; color:rgba(255,255,255,0.4); font-weight:600;">Hardware available</p>
+                    </div>
+                </div>
+                <button id="yocoFloatClose" onclick="window.dismissYocoWidget()" style="width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <!-- Question -->
+            <p style="font-size:12px; font-weight:800; color:#fff; line-height:1.4; margin-bottom:12px;">
+                Need help with your scanner<br>or want to make a purchase?
+            </p>
+
+            <!-- Two action buttons -->
+            <div style="display:flex; flex-direction:column; gap:7px;">
+                <a href="https://www.yoco.com/za/shop/yoco-barcode-scanner/" target="_blank" rel="noopener noreferrer"
+                   style="display:flex; align-items:center; justify-content:center; gap:7px; padding:9px 14px; border-radius:12px; font-size:11px; font-weight:900; color:#fff; text-decoration:none; background:linear-gradient(135deg,#009fe3,#0077cc); box-shadow:0 4px 16px rgba(0,159,227,0.35); transition:filter 0.2s ease, transform 0.2s ease;"
+                   onmouseover="this.style.filter='brightness(1.12)'; this.style.transform='translateY(-1px)'"
+                   onmouseout="this.style.filter='brightness(1)'; this.style.transform='translateY(0)'">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    Get Your Yoco Scanner Now
+                </a>
+                <button onclick="window.showYocoModal()"
+                   style="display:flex; align-items:center; justify-content:center; gap:7px; padding:9px 14px; border-radius:12px; font-size:11px; font-weight:800; color:rgba(255,255,255,0.8); cursor:pointer; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); transition:all 0.2s ease;"
+                   onmouseover="this.style.background='rgba(0,159,227,0.1)'; this.style.borderColor='rgba(0,159,227,0.4)'; this.style.color='#fff'"
+                   onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.12)'; this.style.color='rgba(255,255,255,0.8)'">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#009fe3" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    Scanner Setup Help
+                </button>
+            </div>
+        </div>
+
+        <!-- FAB -->
+        <button id="yocoFab" onclick="window.toggleYocoWidget()" title="Yoco Scanner">
+            <span id="yocoFabDot">!</span>
+            <!-- Barcode icon -->
+            <svg id="yocoFabIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="position:relative;z-index:1;"><line x1="2" y1="7" x2="2" y2="17"/><line x1="6" y1="5" x2="6" y2="19"/><line x1="10" y1="7" x2="10" y2="17"/><line x1="14" y1="5" x2="14" y2="19"/><line x1="18" y1="7" x2="18" y2="17"/><line x1="22" y1="5" x2="22" y2="19"/></svg>
+            <!-- Close icon (hidden by default) -->
+            <svg id="yocoFabClose" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="position:absolute;opacity:0;transition:opacity 0.2s;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+    </div>
+
+    <!-- ═══ YOCO SCANNER — HERO MODAL ═══ -->
+    <div id="yocoScannerModal" class="no-print fixed inset-0 z-[160] flex items-end sm:items-center justify-center modal-hidden" style="background: rgba(0,0,0,0.85); backdrop-filter: blur(16px);">
+        
+        <!-- Card -->
+        <div class="yoco-hero-card relative w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl overflow-hidden text-white"
+             style="background: #07101a; border: 1px solid rgba(0,159,227,0.35); box-shadow: 0 0 0 1px rgba(0,159,227,0.1), 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(0,159,227,0.2);">
+
+            <!-- ── HERO BAND ── -->
+            <div class="relative overflow-hidden" style="background: linear-gradient(135deg, #001f35 0%, #00294a 50%, #00162b 100%); min-height: 200px;">
+
+                <!-- Animated grid lines -->
+                <svg class="absolute inset-0 w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="yg" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+                            <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#009fe3" stroke-width="0.5"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#yg)"/>
+                </svg>
+
+                <!-- Radial glow -->
+                <div class="absolute inset-0" style="background: radial-gradient(ellipse at 50% 120%, rgba(0,159,227,0.25) 0%, transparent 65%);"></div>
+
+                <!-- Close btn -->
+                <button onclick="window.closeYocoModal()" class="absolute top-4 right-4 z-20 w-8 h-8 flex items-center justify-center rounded-full transition-all" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+
+                <!-- Content row -->
+                <div class="relative z-10 flex items-center gap-6 p-7 pb-0">
+
+                    <!-- Scanner SVG illustration -->
+                    <div class="relative flex-shrink-0" style="width:110px; height:130px;">
+
+                        <!-- Pulse rings -->
+                        <div class="yoco-pulse-ring" style="position:absolute; inset:-8px; border-radius:18px; border:1.5px solid rgba(0,159,227,0.4);"></div>
+                        <div class="yoco-pulse-ring yoco-pulse-ring-2" style="position:absolute; inset:-8px; border-radius:18px; border:1.5px solid rgba(0,159,227,0.4);"></div>
+
+                        <!-- Scanner body -->
+                        <div class="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-2"
+                             style="background: linear-gradient(160deg, #0a2540 0%, #061828 100%); border: 1.5px solid rgba(0,159,227,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);">
+
+                            <!-- LED indicator -->
+                            <div style="width:6px; height:6px; border-radius:50%; background:#00ff88; box-shadow: 0 0 8px #00ff88; margin-top:6px;"></div>
+
+                            <!-- Scan window -->
+                            <div class="relative rounded-lg overflow-hidden"
+                                 style="width:72px; height:56px; background:rgba(0,0,0,0.7); border:1px solid rgba(0,159,227,0.4); box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);">
+                                <div class="yoco-scan-beam"></div>
+                                <!-- Barcode lines inside -->
+                                <div style="position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; gap:2px; padding:6px 4px; opacity:0.35;">
+                                    <div class="yoco-bar" style="width:2px; height:70%; background:#009fe3; border-radius:1px;"></div>
+                                    <div class="yoco-bar" style="width:4px; height:90%; background:#009fe3; border-radius:1px;"></div>
+                                    <div class="yoco-bar" style="width:2px; height:60%; background:#009fe3; border-radius:1px;"></div>
+                                    <div class="yoco-bar" style="width:3px; height:80%; background:#009fe3; border-radius:1px;"></div>
+                                    <div class="yoco-bar" style="width:2px; height:70%; background:#009fe3; border-radius:1px;"></div>
+                                    <div class="yoco-bar" style="width:4px; height:95%; background:#009fe3; border-radius:1px;"></div>
+                                    <div class="yoco-bar" style="width:2px; height:55%; background:#009fe3; border-radius:1px;"></div>
+                                    <div class="yoco-bar" style="width:3px; height:85%; background:#009fe3; border-radius:1px;"></div>
+                                </div>
+                                <!-- Corners -->
+                                <div style="position:absolute;top:4px;left:4px;width:10px;height:10px;border-top:2px solid #009fe3;border-left:2px solid #009fe3;border-radius:2px 0 0 0;"></div>
+                                <div style="position:absolute;top:4px;right:4px;width:10px;height:10px;border-top:2px solid #009fe3;border-right:2px solid #009fe3;border-radius:0 2px 0 0;"></div>
+                                <div style="position:absolute;bottom:4px;left:4px;width:10px;height:10px;border-bottom:2px solid #009fe3;border-left:2px solid #009fe3;border-radius:0 0 0 2px;"></div>
+                                <div style="position:absolute;bottom:4px;right:4px;width:10px;height:10px;border-bottom:2px solid #009fe3;border-right:2px solid #009fe3;border-radius:0 0 2px 0;"></div>
+                            </div>
+
+                            <!-- Handle grip lines -->
+                            <div style="display:flex; flex-direction:column; gap:3px; padding-bottom:8px;">
+                                <div style="width:28px; height:2px; background:rgba(0,159,227,0.3); border-radius:1px;"></div>
+                                <div style="width:20px; height:2px; background:rgba(0,159,227,0.2); border-radius:1px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- YOCO badge -->
+                        <div class="yoco-badge-pop absolute -top-2 -right-3 px-2 py-1 rounded-full text-white font-black text-[9px] tracking-widest uppercase"
+                             style="background: #009fe3; border: 2px solid #07101a; box-shadow: 0 4px 12px rgba(0,159,227,0.5);">YOCO</div>
+                    </div>
+
+                    <!-- Text -->
+                    <div class="flex-1 pb-2">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full mb-3 text-[9px] font-black uppercase tracking-[0.2em]"
+                             style="background: rgba(0,159,227,0.15); border: 1px solid rgba(0,159,227,0.3); color: #00d4ff;">
+                            <span style="width:5px;height:5px;border-radius:50%;background:#00d4ff;display:inline-block;"></span>
+                            New Hardware Available
+                        </div>
+                        <h2 class="font-black leading-none mb-2" style="font-size: clamp(1.4rem, 5vw, 1.75rem); letter-spacing: -0.03em; color:#fff;">
+                            Scan smarter.<br>
+                            <span style="color:#009fe3;">Sell faster.</span>
+                        </h2>
+                        <p class="text-xs leading-relaxed" style="color: rgba(255,255,255,0.5);">
+                            Pair the Yoco Barcode Scanner with your Yoco POS for instant, error-free checkouts.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Stats strip -->
+                <div class="relative z-10 grid grid-cols-3 gap-px mx-7 mt-5" style="border-top: 1px solid rgba(0,159,227,0.15);">
+                    <div class="py-3 text-center">
+                        <p class="font-black text-lg" style="color:#009fe3; letter-spacing:-0.04em;">0.1s</p>
+                        <p style="font-size:9px; color:rgba(255,255,255,0.4); font-weight:700; text-transform:uppercase; letter-spacing:0.08em;">Scan Speed</p>
+                    </div>
+                    <div class="py-3 text-center" style="border-left:1px solid rgba(0,159,227,0.15); border-right:1px solid rgba(0,159,227,0.15);">
+                        <p class="font-black text-lg" style="color:#009fe3; letter-spacing:-0.04em;">USB</p>
+                        <p style="font-size:9px; color:rgba(255,255,255,0.4); font-weight:700; text-transform:uppercase; letter-spacing:0.08em;">Plug & Play</p>
+                    </div>
+                    <div class="py-3 text-center">
+                        <p class="font-black text-lg" style="color:#009fe3; letter-spacing:-0.04em;">∞</p>
+                        <p style="font-size:9px; color:rgba(255,255,255,0.4); font-weight:700; text-transform:uppercase; letter-spacing:0.08em;">Reliability</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── BODY ── -->
+            <div class="p-6 space-y-4">
+
+                <!-- Feature pills -->
+                <div class="flex flex-wrap gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold" style="background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); color:#00ff88;">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        Works with Yoco POS
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold" style="background:rgba(0,159,227,0.08); border:1px solid rgba(0,159,227,0.2); color:#009fe3;">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        No Drivers Needed
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold" style="background:rgba(0,159,227,0.08); border:1px solid rgba(0,159,227,0.2); color:#009fe3;">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        Setup in Minutes
+                    </span>
+                </div>
+
+                <!-- PRIMARY CTA -->
+                <a href="https://www.yoco.com/za/shop/yoco-barcode-scanner/" target="_blank" rel="noopener noreferrer"
+                   class="yoco-buy-btn flex items-center justify-between w-full px-6 py-4 rounded-2xl text-white font-black"
+                   style="font-size:0.95rem; letter-spacing:-0.01em; box-shadow: 0 8px 32px rgba(0,159,227,0.4), 0 2px 8px rgba(0,0,0,0.4);">
+                    <span class="flex items-center gap-3">
+                        <span style="width:36px;height:36px;background:rgba(255,255,255,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                        </span>
+                        <span>
+                            <span class="block" style="font-size:0.7rem; font-weight:700; opacity:0.75; text-transform:uppercase; letter-spacing:0.1em;">Buy Now</span>
+                            Purchase Yoco Scanner
+                        </span>
+                    </span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0; opacity:0.8;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+
+                <!-- SETUP GUIDES — side by side -->
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="https://support.yoco.help/en/articles/573631-setting-up-the-barcode-scanner" target="_blank" rel="noopener noreferrer"
+                       class="yoco-guide-btn flex flex-col gap-2 p-4 rounded-2xl"
+                       style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.65);">
+                        <div style="width:32px;height:32px;background:rgba(0,159,227,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                            <svg class="yoco-guide-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#009fe3" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                        </div>
+                        <div>
+                            <p style="font-size:11px; font-weight:800; color:#fff; margin-bottom:2px;">Setting Up</p>
+                            <p style="font-size:9px; line-height:1.4; opacity:0.5;">Connect &amp; configure your scanner from scratch</p>
+                        </div>
+                        <div class="flex items-center gap-1 mt-auto" style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#009fe3;">
+                            Read guide
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="https://support.yoco.help/en/articles/602703-selling-with-the-barcode-scanner" target="_blank" rel="noopener noreferrer"
+                       class="yoco-guide-btn flex flex-col gap-2 p-4 rounded-2xl"
+                       style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.65);">
+                        <div style="width:32px;height:32px;background:rgba(0,159,227,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                            <svg class="yoco-guide-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#009fe3" stroke-width="2.5"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                        </div>
+                        <div>
+                            <p style="font-size:11px; font-weight:800; color:#fff; margin-bottom:2px;">Selling with It</p>
+                            <p style="font-size:9px; line-height:1.4; opacity:0.5;">How to ring up sales using your barcode scanner</p>
+                        </div>
+                        <div class="flex items-center gap-1 mt-auto" style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#009fe3;">
+                            Read guide
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Dismiss -->
+                <button onclick="window.closeYocoModal()"
+                        style="width:100%; padding:10px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.15em; color:rgba(255,255,255,0.25); background:none; border:none; cursor:pointer; transition:color 0.2s;"
+                        onmouseover="this.style.color='rgba(255,255,255,0.5)'"
+                        onmouseout="this.style.color='rgba(255,255,255,0.25)'">
+                    Not right now
                 </button>
             </div>
         </div>
@@ -1152,6 +1618,65 @@
         });
         
         window.closeAdvisory = function() { document.getElementById('advisoryModal').classList.add('modal-hidden'); isFirstTime = false; syncToCloud(); };
+
+        // ── Yoco Scanner Modal ──────────────────────────────────────────────
+        window.showYocoModal = function() {
+            const modal = document.getElementById('yocoScannerModal');
+            if (modal) modal.classList.remove('modal-hidden');
+        };
+        window.closeYocoModal = function() {
+            const modal = document.getElementById('yocoScannerModal');
+            if (modal) modal.classList.add('modal-hidden');
+        };
+
+        // ── Yoco Floating Widget ────────────────────────────────────────────
+        let yocoBubbleOpen = true; // starts open
+        window.toggleYocoWidget = function() {
+            yocoBubbleOpen = !yocoBubbleOpen;
+            const bubble = document.getElementById('yocoFloatBubble');
+            const dot    = document.getElementById('yocoFabDot');
+            const iconBar = document.getElementById('yocoFabIcon');
+            const iconX   = document.getElementById('yocoFabClose');
+            if (bubble) bubble.classList.toggle('yoco-bubble-hidden', !yocoBubbleOpen);
+            if (dot)    dot.style.display = yocoBubbleOpen ? 'none' : 'flex';
+            if (iconBar) iconBar.style.opacity = yocoBubbleOpen ? '0' : '1';
+            if (iconX)   iconX.style.opacity   = yocoBubbleOpen ? '1' : '0';
+        };
+        window.dismissYocoWidget = function() {
+            yocoBubbleOpen = false;
+            const bubble = document.getElementById('yocoFloatBubble');
+            const dot    = document.getElementById('yocoFabDot');
+            const iconBar = document.getElementById('yocoFabIcon');
+            const iconX   = document.getElementById('yocoFabClose');
+            if (bubble) bubble.classList.add('yoco-bubble-hidden');
+            if (dot)    dot.style.display = 'flex';
+            if (iconBar) iconBar.style.opacity = '1';
+            if (iconX)   iconX.style.opacity = '0';
+        };
+        // Init widget state: bubble open, dot hidden, X shown
+        window.addEventListener('load', () => {
+            const dot = document.getElementById('yocoFabDot');
+            const iconX = document.getElementById('yocoFabClose');
+            if (dot) dot.style.display = 'none';
+            if (iconX) iconX.style.opacity = '1';
+            const iconBar = document.getElementById('yocoFabIcon');
+            if (iconBar) iconBar.style.opacity = '0';
+        });
+
+        // Show scanner prompt once, after the very first barcode is added
+        let yocoPromptShown = false;
+        const _origAdd = window.addBarcode;
+        window.addBarcode = function(skipValidation) {
+            const prevLen = barcodes.length;
+            _origAdd(skipValidation);
+            if (!yocoPromptShown && barcodes.length > prevLen) {
+                yocoPromptShown = true;
+                // Re-open the bubble if dismissed
+                setTimeout(() => {
+                    if (!yocoBubbleOpen) window.toggleYocoWidget();
+                }, 900);
+            }
+        };
         window.applyToAll = function() { if (barcodes.length > 0) { barcodes.forEach(i => { i.design = JSON.parse(JSON.stringify(currentTemplateSettings)); i.template = activeTemplate; }); window.renderList(); window.showToast("Design synced."); syncToCloud(); } };
         window.toggleTheme = function() { isDarkMode = !isDarkMode; document.body.classList.toggle('light-mode', !isDarkMode); syncToCloud(); };
 
